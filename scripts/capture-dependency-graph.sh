@@ -34,7 +34,7 @@ GRAPH_DOT="$OUTPUT_DIR/application-dependencies.dot" \
             {ok, [{application, App, Props}]} ->
                 Applications = proplists:get_value(applications, Props, []),
                 Included = proplists:get_value(included_applications, Props, []),
-                io:format(TextFile, "~s~t~p~tapplications=~p~tincluded=~p~n",
+                io:format(TextFile, "~s\t~p\tapplications=~p\tincluded=~p~n",
                           [File, App, Applications, Included]),
                 lists:foreach(fun(Dep) ->
                     io:format(DotFile, "  \"~p\" -> \"~p\";~n", [App, Dep])
