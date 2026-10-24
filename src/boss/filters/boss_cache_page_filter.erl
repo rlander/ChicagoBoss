@@ -32,7 +32,7 @@ before_filter({page, _}, RequestContext) ->
             Action = proplists:get_value(action, RequestContext),
             Tokens = proplists:get_value(tokens, RequestContext, []),
             Req = proplists:get_value(request, RequestContext, []),
-            Query = Req:query_params(),
+            Query = sbw:query_params(Req),
 
             CacheKey = {ControllerModule, Action, Tokens, Language, Query},
 

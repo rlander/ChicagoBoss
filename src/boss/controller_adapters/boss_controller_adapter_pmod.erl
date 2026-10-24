@@ -12,6 +12,7 @@
 
 % Either a great idea or a horrible one
 -module(boss_controller_adapter_pmod).
+-compile(tuple_calls).
 -compile(export_all).
 
 

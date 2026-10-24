@@ -25,7 +25,7 @@
 %% TODO REFACTOR AND TEST
 handle_request(Bridge, RouterAdapter) ->
     LoadedApplications = boss_web:get_all_applications(),
-    FullUrl = Bridge:path(),
+    FullUrl = sbw:path(Bridge),
 
     ApplicationForPath = RouterAdapter:find_application_for_path(Bridge,
                                                                   FullUrl,
@@ -41,11 +41,13 @@ handle_request(Bridge, RouterAdapter) ->
     end.
 
 handle_fatal_error(Bridge) ->
-    Response1 = (Bridge:status_code(500)):data(["An unhandled and unrecoverable error occurred. Please check error logs."]),
+    Response1 = sbw:set_response_data(["An unhandled and unrecoverable error occurred. Please check error logs."],
+                                      sbw:set_status_code(500, Bridge)),
     Response1.
 
 handle_application(Bridge, _FullUrl, undefined, _RouterAdapter) ->
-    Response1 = (Bridge:status_code(404)):data(["No application configured at this URL"]),
+    Response1 = sbw:set_response_data(["No application configured at this URL"],
+                                      sbw:set_status_code(404, Bridge)),
     Response1;
 handle_application(Bridge, FullUrl,  App, RouterAdapter) ->
     BaseURL      = boss_web:base_url(App),
@@ -66,7 +68,7 @@ handle_application(Bridge, FullUrl,  App, RouterAdapter) ->
 
 handle_result(Bridge, _App, _StaticPrefix, Url, _IsSpecialFile = true, _) ->
     %lager:debug("sending static file ~p",[_StaticPrefix ++ Url]),
-    Bridge:set_response_file(_StaticPrefix ++ Url);
+    sbw:set_response_file(_StaticPrefix ++ Url, Bridge);
 handle_result(Bridge, App, StaticPrefix, Url, _IsSpecialFile = false, RouterAdapter) ->
     TestStaticPrefix = string:substr(Url, 1, length(StaticPrefix)),
     case TestStaticPrefix of
@@ -82,10 +84,10 @@ build_static_response(App, StaticPrefix, Url, Bridge) ->
     Sha1         = make_etag(App, StaticPrefix, File),
     Ops          = [
                     fun(Resp) -> dev_headers(Resp, IsDevelopment) end,
-                    fun(Resp) ->  Resp:set_response_file([$/ |File])    end,
+                    fun(Resp) ->  sbw:set_response_file([$/ |File], Resp)    end,
                     fun(Resp) ->  case Sha1 of
                                       {error, _} -> Resp;
-                                      _          -> Resp:set_header("Etag",Sha1)
+                                      _          -> sbw:set_header("Etag", Sha1, Resp)
                                   end end,
                     fun(Resp) ->  Resp    end
                       ],
@@ -100,7 +102,7 @@ build_static_response(App, StaticPrefix, Url, Bridge) ->
 
 -spec(dev_headers(any(), production|development)-> any()).
 dev_headers(Response, development) ->
-    Response:set_header("Cache-Control", "no-cache");
+    sbw:set_header("Cache-Control", "no-cache", Response);
 dev_headers(Response, _) ->
     Response.
 
@@ -144,13 +146,13 @@ build_dynamic_response(App, Bridge, Url, RouterAdapter) ->
                                 ),
     {Time, {StatusCode, Headers, Payload}} = TR,
     ErrorFormat        = "~s ~s [~p] ~p ~pms",
-    RequestMethod    = Bridge:request_method(),
-    FullUrl        = Bridge:path(),
+    RequestMethod    = sbw:request_method(Bridge),
+    FullUrl        = sbw:path(Bridge),
     ErrorArgs        = [RequestMethod, FullUrl, App, StatusCode, Time div 1000],
     log_status_code(StatusCode, ErrorFormat, ErrorArgs),
-    Response1        = Bridge:set_status_code(StatusCode),
+    Response1        = sbw:set_status_code(StatusCode, Bridge),
     Response2        = lists:foldl(fun({K, V}, Acc) ->
-                          Acc:set_header(K, V)
+                          sbw:set_header(K, V, Acc)
                       end,
                       Response1,
                       Headers),
@@ -166,13 +168,13 @@ set_timer(Request, Url, Mode, AppInfo, TranslatorPid, RouterPid,
     timer:tc(?MODULE,process_request,[NewAppInfo, Request, Mode, Url, RouterAdapter]).
 
 handle_response(Bridge, _Payload = {stream, Generator, Acc0}, RequestMethod) ->
-    Protocol        = Bridge:protocol_version(),
+    Protocol        = sbw:protocol_version(Bridge),
     TransferEncoding    = handle_protocol(Protocol),
-    Response3        = Bridge:set_response_data(chunked),
+    Response3        = sbw:set_response_data(chunked, Bridge),
     Response3,
     process_stream_generator(Bridge, TransferEncoding, RequestMethod, Generator, Acc0);
 handle_response(Bridge, Payload , _RequestMethod) ->
-    Bridge:set_response_data(Payload).
+    sbw:set_response_data(Payload, Bridge).
 
 
 handle_protocol({1,1}) -> chunked;
@@ -196,15 +198,15 @@ process_stream_generator(Req, chunked, Method, Generator, Acc) ->
                 0 -> ok;
                 Length ->
                     Chunk = [io_lib:format("~.16b\r\n", [Length]), Data, <<"\r\n">>],
-                    ok = mochiweb_socket:send(Req:socket(), Chunk)
+                    ok = mochiweb_socket:send(sbw:socket(Req), Chunk)
             end,
             process_stream_generator(Req, chunked, Method, Generator, Acc1);
-        done -> ok = mochiweb_socket:send(Req:socket(), ["0\r\n\r\n"])
+        done -> ok = mochiweb_socket:send(sbw:socket(Req), ["0\r\n\r\n"])
     end;
 process_stream_generator(Req, identity, Method, Generator, Acc) ->
     case Generator(Acc) of
         {output, Data, Acc1} ->
-            mochiweb_socket:send(Req:socket(), Data),
+            mochiweb_socket:send(sbw:socket(Req), Data),
             process_stream_generator(Req, identity, Method, Generator, Acc1);
         done -> ok
     end.
@@ -370,7 +372,7 @@ process_result(AppInfo, Req, {moved, {Application, Controller, Action, Params}, 
     end,
     ExtraParams = [{application, Application}, {controller, Controller}, {action, Action}],
     URL = boss_erlydtl_tags:url(ExtraParams ++ Params, [
-            {host, Req:header(host)},
+            {host, sbw:header(host, Req)},
             {base_url, AppInfo#boss_app_info.base_url},
             {application, AppInfo#boss_app_info.application},
             {router_pid, RouterPid}]),
@@ -400,7 +402,7 @@ process_result(AppInfo, Req, {redirect, {Application, Controller, Action, Params
     end,
     ExtraParams = [{application, Application1}, {controller, Controller}, {action, Action}],
     URL = boss_erlydtl_tags:url(ExtraParams ++ Params, [
-            {host, Req:header(host)},
+            {host, sbw:header(host, Req)},
             {base_url, AppInfo1#boss_app_info.base_url},
             {application, AppInfo1#boss_app_info.application},
             {router_pid, RouterPid}]),
