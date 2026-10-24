@@ -14,7 +14,7 @@ git status --short > "$OUTPUT_DIR/worktree-status.txt"
 
 if [[ -n "$BUILD_LOG" && -f "$BUILD_LOG" ]]; then
     # Keep the complete build log untouched; this is a filtered companion.
-    rg -n -i '(^|[^[:alnum:]])warning([^[:alnum:]]|:)' "$BUILD_LOG" \
+    rg -n -i '(^|[^[:alnum:]])(warning|warn)([^[:alnum:]]|:)' "$BUILD_LOG" \
         > "$OUTPUT_DIR/compiler-warnings.txt" || true
 else
     : > "$OUTPUT_DIR/compiler-warnings.txt"
@@ -27,7 +27,7 @@ GRAPH_DOT="$OUTPUT_DIR/application-dependencies.dot" \
     Dot = os:getenv("GRAPH_DOT"),
     {ok, TextFile} = file:open(Text, [write]),
     {ok, DotFile} = file:open(Dot, [write]),
-    io:format(DotFile, "digraph applications {~n"),
+    io:format(DotFile, "digraph applications {~n", []),
     Files = lists:sort(filelib:wildcard("ebin/*.app") ++ filelib:wildcard("deps/*/ebin/*.app")),
     lists:foreach(fun(File) ->
         case file:consult(File) of
@@ -43,7 +43,7 @@ GRAPH_DOT="$OUTPUT_DIR/application-dependencies.dot" \
                 io:format(TextFile, "~s~tUNPARSED~t~p~n", [File, Other])
         end
     end, Files),
-    io:format(DotFile, "}~n"),
+    io:format(DotFile, "}~n", []),
     file:close(TextFile),
     file:close(DotFile),
     halt().
