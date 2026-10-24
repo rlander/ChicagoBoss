@@ -85,7 +85,7 @@ set_controllers(Pid, Controllers) ->
     gen_server:call(Pid, {set_controllers, Controllers}).
 
 find_application_for_path(Req, Path, Applications) ->
-    Host    = Req:header(host),
+    Host    = sbw:header(host, Req),
     UseHost = case Host of
         undefined -> undefined;
         _ -> hd(re:split(Host, ":", [{return, list}]))
@@ -114,6 +114,5 @@ find_application_for_path(Host, Path, Default, [App|Rest], MatchScore) ->
         false -> {Default, MatchScore}
     end,
     find_application_for_path(Host, Path, UseApp, Rest, UseScore).
-
 
 

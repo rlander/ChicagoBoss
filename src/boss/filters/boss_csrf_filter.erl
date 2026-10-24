@@ -106,10 +106,10 @@ pre_check_csrf_token(RequestContext, CSRF_Token, NewToken) ->
         true ->
             reject_(no_csrf_cookie);
         false ->
-            case Request:post_param(?CSRFTOKEN_PARAM_NAME) of
+            case sbw:post_param(?CSRFTOKEN_PARAM_NAME, Request) of
                 undefined ->
                     %% No CSRF Token in POST, let's check HEADERS
-                    case proplists:get_value(?CSRFTOKEN_HEADER, Request:headers()) of
+                    case proplists:get_value(?CSRFTOKEN_HEADER, sbw:headers(Request)) of
                         undefined -> reject_(no_csrf_token);
                         HTTPToken ->
                             check_csrf_token(RequestContext, HTTPToken, CSRF_Token, NewToken)
@@ -133,7 +133,7 @@ check_csrf_token(RequestContext, PostToken, CSRF_Token, NewToken) ->
 
 get_csrf_token(Request) ->
     %% Get CSRF Token from cookies
-    case Request:cookie(atom_to_list(?CSRFTOKEN_NAME)) of
+    case sbw:cookie(atom_to_list(?CSRFTOKEN_NAME), Request) of
         "undefined" ->
             %% Generate new Token
             [none, new_token()];
@@ -146,7 +146,7 @@ get_csrf_token(Request) ->
 
 check_referer(Req) ->
     %% Check referer, if needed
-    case Req:protocol() of
+    case sbw:protocol(Req) of
         http ->
             true;
         Protocol ->
@@ -155,7 +155,7 @@ check_referer(Req) ->
                 undefined ->
                     false;
                 _Referer -> %% TODO: Finish referer check
-                    same_host(Req:header("referer"), Protocol, Req:header("host"))
+            same_host(sbw:header("referer", Req), Protocol, sbw:header("host", Req))
             end
     end.
 
@@ -182,4 +182,3 @@ middle_filter_variables( Variables, Context ) ->
             proplists:delete(?CSRFTOKEN_NAME, Variables)
     end,
     [{atom_to_list(?CSRFTOKEN_NAME), TemplateTokenField} | Variables1].
-

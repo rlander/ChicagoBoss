@@ -372,7 +372,7 @@ get_request_loop(AppInfo) ->
     receive
         {From, Uri, Headers} ->
             Req = make_request('GET', Uri, Headers),
-            FullUrl = Req:path(),
+            FullUrl = sbw:path(Req),
             [{_, RouterPid, _, _}] = supervisor:which_children(AppInfo#boss_app_info.router_sup_pid),
             [{_, TranslatorPid, _, _}] = supervisor:which_children(AppInfo#boss_app_info.translator_sup_pid),
             RouterAdapter = boss_env:router_adapter(),
@@ -396,7 +396,7 @@ post_request_loop(AppInfo) ->
             RouterAdapter = boss_env:router_adapter(),
             Req = make_request('POST', Uri,
                    [{"Content-Encoding", "application/x-www-form-urlencoded"} | Headers]),
-            FullUrl = Req:path(),
+            FullUrl = sbw:path(Req),
             Result = boss_web_controller_handle_request:process_request(AppInfo#boss_app_info{
                                router_pid     = RouterPid,
                                translator_pid = TranslatorPid },
@@ -422,7 +422,7 @@ put_request_loop(AppInfo) ->
             RouterAdapter = boss_env:router_adapter(),
             Req = make_request('PUT', Uri, 
                    [{"Content-Encoding", "application/x-www-form-urlencoded"} | Headers]),
-            FullUrl = Req:path(),
+            FullUrl = sbw:path(Req),
             Result = boss_web_controller_handle_request:process_request(AppInfo#boss_app_info{
                                router_pid     = RouterPid, 
                                translator_pid = TranslatorPid }, 
@@ -448,7 +448,7 @@ delete_request_loop(AppInfo) ->
             RouterAdapter = boss_env:router_adapter(),
             Req = make_request('DELETE', Uri, 
                    [{"Content-Encoding", "application/x-www-form-urlencoded"} | Headers]),
-            FullUrl = Req:path(),
+            FullUrl = sbw:path(Req),
             Result = boss_web_controller_handle_request:process_request(AppInfo#boss_app_info{
                                router_pid     = RouterPid, 
                                translator_pid = TranslatorPid }, 

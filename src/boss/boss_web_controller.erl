@@ -217,7 +217,7 @@ generate_session_id(Request) ->
     case boss_env:get_env(session_enable, true) of
         true ->
             SessionKey = boss_session:get_session_key(),
-            boss_session:new_session(Request:cookie(SessionKey));
+            boss_session:new_session(sbw:cookie(SessionKey, Request));
         false ->
             undefined
     end.
@@ -261,7 +261,7 @@ execute_action_inner(Controller, Action, Tokens, Location, AppInfo,
     Adapter                             = make_action_adapter(Controller, AppInfo, Adapters),
     SessionID1                          = make_action_session_id(Controller, AppInfo, Req,
                                                                  SessionID, Adapter),
-    RequestMethod                       = Req:request_method(),
+    RequestMethod                       = sbw:request_method(Req),
     RequestContext1                     = [{request, Req},
                                            {session_id, SessionID1},
                                            {method, RequestMethod},
@@ -288,7 +288,7 @@ execute_action_inner(Controller, Action, Tokens, Location, AppInfo,
 apply_action(Req, Adapter, AdapterInfo, RequestContext2) ->
     case apply_before_filters(Adapter, AdapterInfo, RequestContext2) of
     {ok, RC3} ->
-        EffectiveRequestMethod = case Req:request_method() of
+        EffectiveRequestMethod = case sbw:request_method(Req) of
                      'HEAD' -> 'GET';
                      Method -> Method
                      end,
