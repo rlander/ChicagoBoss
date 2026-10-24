@@ -1,0 +1,15 @@
+# Generated dependency declarations inspected for legacy transport.
+# Columns: source declaration<TAB>dependency<TAB>original URL<TAB>HTTPS URL<TAB>scope/action
+deps/erlando/rebar.config	pmod_transform	git://github.com/erlang/pmod_transform.git	https://github.com/erlang/pmod_transform.git	active transitive; lock pins f96b8b572395581d58fe3dd7c3e61f3f0e8fa6dc
+deps/simple_bridge/rebar.config	stacktrace_compat	git://github.com/g-andrade/stacktrace_compat	https://github.com/g-andrade/stacktrace_compat	active transitive; lock uses HTTPS and exact fe6238499a216f6f94836be9ec0b3956ea5c6101
+deps/gen_smtp/rebar.config	eiconv	git://github.com/zotonic/eiconv.git	https://github.com/zotonic/eiconv.git	inactive test profile; not in historical build closure
+deps/erlydtl/rebar.config.script	merl	git://github.com/erlydtl/merl.git	https://github.com/erlydtl/merl.git	conditional only for old syntax_tools; inactive on OTP 21.3
+deps/erlydtl/rebar-slex.config	slex	git://github.com/erlydtl/slex.git	https://github.com/erlydtl/slex.git	alternate test configuration; inactive historical build
+deps/simple_bridge/rebar.test.config	stacktrace_compat	git://github.com/g-andrade/stacktrace_compat	https://github.com/g-andrade/stacktrace_compat	alternate test configuration; lock already uses HTTPS
+deps/simple_bridge/rebar.test.config	ibrowse	git://github.com/cmullaparthi/ibrowse	https://github.com/cmullaparthi/ibrowse	alternate test configuration; lock already uses HTTPS
+deps/simple_bridge/rebar_deps/inets.deps	mimetypes	git://github.com/spawngrid/mimetypes.git	https://github.com/spawngrid/mimetypes.git	alternate legacy configuration; root lock pins verified commit
+deps/simple_bridge/rebar_deps/mochiweb.deps	mochiweb	git://github.com/mochi/mochiweb.git	https://github.com/mochi/mochiweb.git	alternate legacy configuration; root lock pins verified commit
+deps/simple_bridge/rebar_deps/webmachine.deps	mochiweb	git://github.com/mochi/mochiweb.git	https://github.com/mochi/mochiweb.git	inactive alternate configuration
+deps/simple_bridge/rebar_deps/webmachine.deps	webmachine	git://github.com/webmachine/webmachine.git	https://github.com/webmachine/webmachine.git	inactive alternate configuration
+deps/simple_bridge/rebar_deps/cowboy.deps	cowboy	git://github.com/ninenines/cowboy	https://github.com/ninenines/cowboy	inactive alternate configuration
+deps/simple_bridge/rebar_deps/yaws.deps	yaws	git://github.com/klacke/yaws	https://github.com/klacke/yaws	inactive alternate configuration
