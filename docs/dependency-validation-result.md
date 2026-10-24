@@ -42,6 +42,14 @@ The complete evidence root is:
 /private/tmp/chicagoboss-dependency-validation.KfUEpE/evidence
 ```
 
+An archive containing only this dependency-validation evidence (and no
+baseline archive contents) is:
+
+```text
+/private/tmp/chicagoboss-dependency-reproducibility-otp-21.3.8.24.tar.gz
+SHA-256 bf9b1dc34c9605eb32bc2a86e40cd059ef85a92a5fedd87c0781f5a289c09d45
+```
+
 In particular, `https-network/resolved-dependencies.tsv` contains one
 `VERIFIED` row for each of the 34 locked revisions, and
 `clean-build/final-sha-verification/resolved-dependencies.tsv` is the final
