@@ -1,0 +1,2 @@
+-module(legacy_compat_person, [Id, Name]).
+-compile(export_all).

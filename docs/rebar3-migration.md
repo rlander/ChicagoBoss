@@ -8,13 +8,16 @@ the immutable historical baseline.
 
 The active ChicagoBoss application, boss_db, locked dependency closure,
 generated skeleton, tests, release, and tar packaging are buildable through
-Rebar3 on exactly Erlang/OTP 21.3.8.24 with Rebar3 3.15.2.
+Rebar3 on exactly Erlang/OTP 21.3.8.24 with Rebar3 3.15.2 when the pinned
+project-provider revision is available from its Git remote. The feature-branch
+validation used a temporary bare mirror because the provider commit was not yet
+published.
 
 The result is PARTIALLY_RESTORED when compared with the historical workflow:
 
 - Rebar3 compile succeeds from an empty project build state.
 - The locked dependency graph materializes and every checkout SHA verifies.
-- EUnit passes all 33 tests.
+- EUnit passes all 38 tests, including the legacy compiler integration fixture.
 - The unchanged Common Test suite still fails one case because it does not
   start boss_mq; its expected poll/2 result shape is also stale. This is a
   test-maintenance failure, not a dependency failure.
@@ -87,13 +90,16 @@ The old Rebar 2 to Rebar3 mapping is:
 | make / ./rebar compile | rebar3 compile |
 | ./rebar eunit | rebar3 eunit |
 | ./rebar ct | rebar3 ct |
-| custom Rebar compiler plugin | ordinary Rebar3 application discovery and compile |
+| custom Rebar compiler plugin | Rebar3 project provider calling the historical Boss compiler |
 | make app / boss new | rebar3 new chicagoboss using skel/chicagoboss.template |
 | make release / custom tar flow | rebar3 release / rebar3 tar |
 | copied deps/ in generated applications | generated rebar.config plus generated rebar.lock |
 
-No Rebar3 plugin was necessary. The old plugin’s useful behavior was either
-standard Rebar3 compilation or an explicit, documented packaging hook.
+The Rebar3 project provider is intentionally small. It owns only the bridge
+from Rebar3 output paths into `boss_load`; controller, model, view, route, and
+application metadata compilation remains in the existing Chicago Boss
+compiler machinery. The provider source and compatibility transform are under
+`priv/rebar3/chicago_boss_rebar3`.
 
 ## Dependency graph and lock policy
 
@@ -178,25 +184,23 @@ immutable public 0.9.0 ref c7b9119b090cf5f4439e8b2b034a4541e746ab0c.
 This local-mirror distinction is the reproducibility boundary for validating
 unpublished branch changes.
 
-The controller keeps the smallest OTP 21-compatible pmod shape:
+The controller preserves the original Chicago Boss parameterized-module syntax:
 
 ~~~erlang
--module(generated_app_health_controller).
--export([new/1, index/3]).
+-module(generated_app_health_controller, [Req]).
+-export([index/2]).
 
-new(_Req) ->
-    {?MODULE, undefined}.
-
-index('GET', [], _Instance) ->
+index('GET', []) ->
     {output, "ok"};
-index('HEAD', [], _Instance) ->
+index('HEAD', []) ->
     {output, "ok"}.
 ~~~
 
-The {Module, State} instance tuple works with ChicagoBoss’s existing
-tuple_calls pmod adapter without using OTP 21-removed parameterized-module
-syntax. Direct output avoids requiring src/view to be present in a production
-Relx package.
+The post-compile Chicago Boss provider invokes `boss_load` and
+`boss_controller_compiler`, which adds route metadata before the historical
+pmod transforms. This retains `_routes/1`, `new/1`, and the unchanged
+`boss_controller_adapter_pmod` runtime API. Direct parameterized controllers
+are therefore supported without application source changes.
 
 Two independent template generations produced the same 18-file layout after
 excluding the expected application-name substitutions; the comparison is in
@@ -238,7 +242,7 @@ ct/boss_mq_SUITE.erl.
 | --- | ---: | --- | --- |
 | clean normal-network rebar3 compile | 1 | TOOLING_NETWORK | root-clean/compile-normal-network-final.* |
 | clean network-enabled rebar3 compile | 0 | pass | root-clean/compile-network-final.* |
-| rebar3 eunit | 0 | pass, 33/33 | root-clean/eunit-final.* |
+| rebar3 eunit | 0 | pass, 38/38 | root-clean/eunit-final.* |
 | unchanged rebar3 ct | 1 | TEST / stale setup | root-clean/ct-final-correct-path.* |
 | rebar3 release | 0 | pass | root-clean/release-final.* |
 | rebar3 tar | 0 | pass | root-clean/tar-final.* |

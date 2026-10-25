@@ -1,0 +1,8 @@
+{application, legacy_compat, [
+    {description, "Legacy Chicago Boss compatibility fixture"},
+    {vsn, "0.1.0"},
+    {modules, []},
+    {registered, []},
+    {applications, [kernel, stdlib, crypto, boss]},
+    {env, []}
+]}.

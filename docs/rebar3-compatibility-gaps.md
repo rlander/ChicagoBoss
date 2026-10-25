@@ -66,30 +66,24 @@ index('GET', []) ->
     {output, "ok"}.
 ```
 
-The generated Rebar3 controller uses an ordinary OTP 21 module and an explicit
-instance constructor:
+The generated Rebar3 controller remains a parameterized module. The Rebar3
+project provider invokes the historical Chicago Boss compiler after ordinary
+framework/dependency compilation:
 
-```erlang
--module(myapp_health_controller).
--export([new/1, index/3]).
-
-new(Req) ->
-    {?MODULE, Req}.
-
-index('GET', [], Req) ->
-    {output, sbw:query_param("message", Req)}.
+```text
+chicago_boss_compile
+  -> boss_load:load_all_modules_and_emit_app_file/2
+     -> boss_controller_compiler:compile/2
+        -> boss_compiler:compile/2
+           -> boss_db_pmod_pt and boss_db_pt
 ```
 
-The production adapter contains `-compile(tuple_calls)`. This allows the
-adapter to invoke an instance represented as `{Module, State}` while retaining
-the historical controller calling convention. The request is stored as the
-instance state by `new/1` and is passed to the action as its final argument.
-
-The health controller stores `undefined` because it does not need request data.
-Existing applications using parameterized-module syntax need explicit
-validation with the Rebar3 generated application. They may require the
-`pmod_pt` compatibility transform or a migration to the explicit `new/1` and
-action-arity form.
+OTP 21.3.8.24 rejects raw parameterized-module syntax in the native compiler,
+but this is an OTP compiler limitation rather than a Rebar3 limitation. The
+historical compiler adds `_routes/0` before applying the pmod transform, and
+the unchanged `boss_controller_adapter_pmod` consumes the resulting
+`_routes/1`, `new/1`, and action exports. Existing applications therefore do
+not need to migrate to an explicit `new/1` or state-argument controller API.
 
 
 Configuration migration
@@ -270,4 +264,3 @@ validation results. They are not required inputs to compile, test, run, or
 package the application. They may be archived externally or removed after the
 baseline review, but documentation links to retained evidence should be
 updated if the directories are deleted.
-

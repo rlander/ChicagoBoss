@@ -1,0 +1,2 @@
+{"/health", [{controller, "health"}, {action, "index"}]}.
+{"/legacy/([a-z]+)", [{controller, "legacy"}, {action, "show"}, {id, '$1'}]}.
