@@ -1,4 +1,4 @@
--module({{appid}}_custom_tags).
+-module({{name}}_custom_tags).
 -compile(export_all).
 
 % put custom tags in here, e.g.
