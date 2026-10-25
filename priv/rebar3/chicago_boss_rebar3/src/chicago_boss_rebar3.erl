@@ -46,6 +46,7 @@ compile_legacy_application(State, AppName) ->
                              "lib", atom_to_list(AppName), "ebin"]),
     ok = filelib:ensure_dir(filename:join(OutDir, "placeholder")),
     add_project_code_paths(State, OutDir),
+    ok = copy_priv_dir(OutDir),
     case boss_load:load_all_modules_and_emit_app_file(AppName, OutDir) of
         ok ->
             rebar_api:info("Chicago Boss legacy compilation completed for ~p", [AppName]),
@@ -54,6 +55,32 @@ compile_legacy_application(State, AppName) ->
             {error, {chicago_boss_compile_failed, AppName, Reason}};
         Other ->
             {error, {chicago_boss_compile_failed, AppName, Other}}
+    end.
+
+copy_priv_dir(OutDir) ->
+    SourceDir = filename:absname("priv"),
+    TargetDir = filename:join(filename:dirname(OutDir), "priv"),
+    case filelib:is_dir(SourceDir) of
+        false ->
+            ok;
+        true ->
+            SourceParts = filename:split(filename:absname(SourceDir)),
+            filelib:fold_files(
+                SourceDir,
+                ".*",
+                true,
+                fun(Source, ok) ->
+                    RelativeParts = lists:nthtail(
+                        length(SourceParts), filename:split(filename:absname(Source))),
+                    Relative = filename:join(RelativeParts),
+                    Target = filename:join(TargetDir, Relative),
+                    ok = filelib:ensure_dir(Target),
+                    case file:copy(Source, Target) of
+                        {ok, _Bytes} -> ok;
+                        ok -> ok
+                    end
+                end,
+                ok)
     end.
 
 add_project_code_paths(State, OutDir) ->
