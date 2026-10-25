@@ -1,7 +1,7 @@
 %% Rebar3 provider for legacy Chicago Boss applications.
 %%
 %% Rebar3 owns dependency resolution and the framework's normal source
-%% compilation.  The provider is deliberately only a bridge: application
+%% compilation. The provider is deliberately only a bridge: application
 %% sources in the historical Chicago Boss directories are still compiled by
 %% boss_load and the existing compiler adapters.
 -module(chicago_boss_rebar3).
@@ -58,7 +58,7 @@ compile_legacy_application(State, AppName) ->
 
 add_project_code_paths(State, AppInfo) ->
     %% Dependencies are already fetched and compiled by the time a post
-    %% compile provider runs.  Add their ebin directories explicitly so the
+    %% compile provider runs. Add their ebin directories explicitly so the
     %% existing compiler adapters see boss_db, erlydtl and their transforms.
     _ = rebar_api:add_deps_to_path(State),
     _ = code:add_patha(rebar_app_info:ebin_dir(AppInfo)),
