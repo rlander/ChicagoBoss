@@ -1,8 +1,7 @@
 {application, chicago_boss_rebar3,
  [{description, "Chicago Boss legacy compiler integration for Rebar3"},
   {vsn, "0.1.0"},
-  {modules, [chicago_boss_rebar3]},
+    {modules, [chicago_boss_rebar3, chicago_boss_pmod_pt]},
   {registered, []},
   {applications, [kernel, stdlib]},
   {env, []}] }.
-
