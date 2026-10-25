@@ -65,7 +65,9 @@ add_project_code_paths(State, OutDir) ->
     ok.
 
 application_name(_State) ->
-    case filelib:wildcard(filename:join(["src", "*.app.src"])) of
+    AppSrcs = filelib:wildcard(filename:join(["src", "*.app.src"])) ++
+              filelib:wildcard(filename:join(["src", "boss", "*.app.src"])),
+    case AppSrcs of
         [AppSrc|_] ->
             case file:consult(AppSrc) of
                 {ok, [{application, AppName, _}]} when is_atom(AppName) ->
