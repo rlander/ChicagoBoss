@@ -9,6 +9,7 @@
 {dir, "{{name}}"}.
 {dir, "{{name}}/config"}.
 {dir, "{{name}}/src"}.
+{dir, "{{name}}/src/boss"}.
 {dir, "{{name}}/src/controller"}.
 {dir, "{{name}}/src/mail"}.
 {dir, "{{name}}/src/mail/view"}.
@@ -22,7 +23,7 @@
 {dir, "{{name}}/priv/init"}.
 {dir, "{{name}}/priv/static"}.
 {template, "rebar3.config", "{{name}}/rebar.config"}.
-{template, "src/project.app.src", "{{name}}/src/{{name}}.app.src"}.
+{template, "src/project.app.src", "{{name}}/src/boss/{{name}}.app.src"}.
 {template, "config/sys.config", "{{name}}/config/sys.config"}.
 {template, "config/vm.args", "{{name}}/config/vm.args"}.
 {template, "src/controller/health_controller.erl", "{{name}}/src/controller/{{name}}_health_controller.erl"}.
