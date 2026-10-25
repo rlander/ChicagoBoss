@@ -1,4 +1,4 @@
--module({{appid}}_custom_filters).
+-module({{name}}_custom_filters).
 -compile(export_all).
 
 % put custom filters in here, e.g.

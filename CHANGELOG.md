@@ -1,5 +1,51 @@
 # ChicagoBoss Changelog
 
+This file records user-visible changes to Chicago Boss. Detailed migration
+evidence is kept in `docs/rebar3-migration.md`.
+
+
+Unreleased
+----------
+
+Build and packaging
+
+- Migrated the active build, test, generated-application, release, and tar
+  workflows to Rebar3.
+- Established Erlang/OTP 21.3.8.24 and Rebar3 3.15.2 as the validated
+  baseline toolchain.
+- Added checked-in dependency resolution through `rebar.lock`.
+- Added generated-application configuration through `config/sys.config` and
+  `config/vm.args`.
+- Replaced the historical Makefile, Rebar 2 executable, custom Rebar plugin,
+  `boss.config`, `init.sh`, and `init-dev.sh` workflow.
+
+Generated applications
+
+- Added a deterministic `/health` route and controller to the skeleton.
+- Added Rebar3-native generated application compilation, testing, release, and
+  tar packaging.
+- Generated applications now resolve ChicagoBoss as an exact Git dependency
+  instead of copying a local checkout and `deps/` tree.
+- The generated default HTTP port is `18001`.
+
+Compatibility and known limitations
+
+- Preserved the OTP 21.3 production compatibility changes for Tinymq and
+  Simple Bridge.
+- `erlmc` and `medici` remain locked as historical `boss_db` dependencies but
+  are excluded from the default release startup closure.
+- The historical `mimetypes` dependency remains temporarily supported through
+  a Rebar3 post-compile hook and release overlay.
+- Automatic development source reload is not yet equivalent to the old
+  `init-dev.sh` behavior.
+- The unchanged Common Test suite still has its known `boss_mq` setup and
+  result-shape failure; test maintenance is intentionally separate.
+- Legacy Windows batch wrappers were removed. Native Windows execution of the
+  POSIX-style `mimetypes` post-compile hook remains unvalidated.
+
+Historical releases
+-------------------
+
 (Note: Prior to Version 0.8.8, changelog is contained in commit history)
 
 ### Version 0.9.0 (in development)

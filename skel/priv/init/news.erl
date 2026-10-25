@@ -1,4 +1,4 @@
--module({{appid}}_01_news).
+-module({{name}}_01_news).
 
 -export([init/0, stop/1]).
 

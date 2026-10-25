@@ -1,0 +1,42 @@
+{description, "Chicago Boss application using the Rebar3 workflow."}.
+{variables, [
+    {name, "bossapp", "The OTP application name"},
+    {desc, "A Chicago Boss application", "The application description"},
+    {boss_url, "https://github.com/ChicagoBoss/ChicagoBoss.git", "The immutable Boss Git remote"},
+    {boss_ref, "c7b9119b090cf5f4439e8b2b034a4541e746ab0c", "The exact Boss Git revision"},
+    {port, "18001", "The isolated HTTP port used by the generated app"}
+]}.
+{dir, "{{name}}"}.
+{dir, "{{name}}/config"}.
+{dir, "{{name}}/src"}.
+{dir, "{{name}}/src/controller"}.
+{dir, "{{name}}/src/mail"}.
+{dir, "{{name}}/src/mail/view"}.
+{dir, "{{name}}/src/view"}.
+{dir, "{{name}}/src/view/health"}.
+{dir, "{{name}}/src/view/lib"}.
+{dir, "{{name}}/src/view/lib/filter_modules"}.
+{dir, "{{name}}/src/view/lib/tag_modules"}.
+{dir, "{{name}}/ct"}.
+{dir, "{{name}}/priv"}.
+{dir, "{{name}}/priv/init"}.
+{dir, "{{name}}/priv/static"}.
+{template, "rebar3.config", "{{name}}/rebar.config"}.
+{template, "src/project.app.src", "{{name}}/src/{{name}}.app.src"}.
+{template, "config/sys.config", "{{name}}/config/sys.config"}.
+{template, "config/vm.args", "{{name}}/config/vm.args"}.
+{template, "src/controller/health_controller.erl", "{{name}}/src/controller/{{name}}_health_controller.erl"}.
+{template, "src/view/health/index.html", "{{name}}/src/view/health/index.html"}.
+{template, "src/view/lib/filter_modules/custom_filters.erl", "{{name}}/src/view/lib/filter_modules/{{name}}_custom_filters.erl"}.
+{template, "src/view/lib/tag_modules/custom_tags.erl", "{{name}}/src/view/lib/tag_modules/{{name}}_custom_tags.erl"}.
+{template, "src/view/lib/README", "{{name}}/src/view/lib/README"}.
+{template, "src/mail/incoming_mail_controller.erl", "{{name}}/src/mail/{{name}}_incoming_mail_controller.erl"}.
+{template, "src/mail/outgoing_mail_controller.erl", "{{name}}/src/mail/{{name}}_outgoing_mail_controller.erl"}.
+{template, "src/mail/view/test_message.html", "{{name}}/src/mail/view/test_message.html"}.
+{template, "src/mail/view/test_message.txt", "{{name}}/src/mail/view/test_message.txt"}.
+{template, "priv/app.routes", "{{name}}/priv/{{name}}.routes"}.
+{template, "priv/init/news.erl", "{{name}}/priv/init/{{name}}_01_news.erl"}.
+{file, "ct/.gitkeep", "{{name}}/ct/.gitkeep"}.
+{file, "priv/static/chicago-boss.png", "{{name}}/priv/static/chicago-boss.png"}.
+{file, "priv/static/favicon.ico", "{{name}}/priv/static/favicon.ico"}.
+{chmod, "{{name}}/config/sys.config", 8#644}.
