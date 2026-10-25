@@ -42,10 +42,10 @@ format_error(Reason) ->
     io_lib:format("~p", [Reason]).
 
 compile_legacy_application(State, AppName) ->
-    AppInfo = rebar_state:current_app(State),
-    OutDir = rebar_app_info:ebin_dir(AppInfo),
+    OutDir = filename:join([rebar_dir:base_dir(State),
+                             "lib", atom_to_list(AppName), "ebin"]),
     ok = filelib:ensure_dir(filename:join(OutDir, "placeholder")),
-    add_project_code_paths(State, AppInfo),
+    add_project_code_paths(State, OutDir),
     case boss_load:load_all_modules_and_emit_app_file(AppName, OutDir) of
         ok ->
             rebar_api:info("Chicago Boss legacy compilation completed for ~p", [AppName]),
@@ -56,12 +56,12 @@ compile_legacy_application(State, AppName) ->
             {error, {chicago_boss_compile_failed, AppName, Other}}
     end.
 
-add_project_code_paths(State, AppInfo) ->
+add_project_code_paths(State, OutDir) ->
     %% Dependencies are already fetched and compiled by the time a post
     %% compile provider runs. Add their ebin directories explicitly so the
     %% existing compiler adapters see boss_db, erlydtl and their transforms.
     _ = rebar_api:add_deps_to_path(State),
-    _ = code:add_patha(rebar_app_info:ebin_dir(AppInfo)),
+    _ = code:add_patha(OutDir),
     ok.
 
 application_name(_State) ->
