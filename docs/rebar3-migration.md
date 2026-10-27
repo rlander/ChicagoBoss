@@ -176,14 +176,11 @@ creates:
 
 The old copied Rebar, Makefile, shell bootstrap files, boss.config, and
 custom plugin are not emitted. The application obtains Boss through its
-generated dependency declaration. In the validation run the Boss URL was a
-local bare mirror of the current feature branch because that branch is not
-published. The template now pins the verified Boss implementation revision
-`fc93f9f`, while the provider is pinned separately to `ac222b7`. Both refs
-must be published to the configured remote before an external clone can
-resolve the generated application's exact feature-branch workflow. This
-local-mirror distinction is the reproducibility boundary for validating
-unpublished branch changes.
+generated dependency declaration. The template pins both the Boss
+implementation and the provider to the immutable feature-branch revision
+`9395d334120f49d6dc8c485582f49d4fb405ed9c`. That revision must remain
+reachable on the configured remote before an external clone can resolve the
+generated application's exact feature-branch workflow.
 
 The controller preserves the original Chicago Boss parameterized-module syntax:
 

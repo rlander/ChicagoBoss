@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %}Issues{% endblock %}
+{% block content %}
+<h1>{% if project %}{{ project.name }} issues{% else %}All issues{% endif %}</h1>
+<form name="issue_filter_form" method="get" action="{% if project %}{% url controller='issues' action='index' project_slug=project.slug %}{% else %}{% url controller='issues' action='index' %}{% endif %}">
+  <label for="status">Status</label>
+  <select id="status" name="status">
+    <option value="all">All</option>
+    <option value="open">Open</option>
+    <option value="closed">Closed</option>
+  </select>
+  <button type="submit">Filter</button>
+</form>
+<ul data-marker="issue-list">
+{% for issue in issues %}
+  <li><a href="{% url controller='issues' action='show' id=issue.id %}">{{ issue.title }}</a> — {{ issue.status }}</li>
+{% endfor %}
+</ul>
+{% endblock %}

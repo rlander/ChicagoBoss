@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block title %}{{ project.name }}{% endblock %}
+{% block content %}
+<h1>{{ project.name }}</h1>
+<p data-marker="project-slug">Slug: {{ project.slug }}</p>
+<p>{{ issue_count }} issue(s).</p>
+{% if user %}<p><a href="{% url controller='issues' action='create' project_slug=project.slug %}">New issue</a> · <a href="{% url controller='projects' action='edit' slug=project.slug %}">Edit project</a></p>{% endif %}
+<ul data-marker="project-issues">
+{% for issue in issues %}
+  <li><a href="{% url controller='issues' action='show' id=issue.id %}">{{ issue.title }}</a> — {{ issue.status }}</li>
+{% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block title %}New issue{% endblock %}
+{% block content %}
+<h1>New issue in {{ project.name }}</h1>
+{% include "partials/validation_errors.html" %}
+<form name="issue_form" method="post" action="{% url controller='issues' action='create' project_slug=project.slug %}">
+  {{ csrf_token|safe }}
+  <label for="title">Title</label>
+  <input id="title" name="title" value="{{ issue.title }}" />
+  <label for="body">Description</label>
+  <textarea id="body" name="body">{{ issue.body }}</textarea>
+  <label for="assignee_id">Assignee ID</label>
+  <input id="assignee_id" name="assignee_id" value="{{ issue.assignee_id }}" />
+  <button type="submit">Save issue</button>
+</form>
+{% endblock %}

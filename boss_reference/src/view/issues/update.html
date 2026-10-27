@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %}Edit issue{% endblock %}
+{% block content %}
+<h1>Edit issue</h1>
+{% include "partials/validation_errors.html" %}
+<form name="issue_form" method="post" action="{% url controller='issues' action='update' id=issue.id %}">
+  {{ csrf_token|safe }}
+  <label for="title">Title</label>
+  <input id="title" name="title" value="{{ issue.title }}" />
+  <label for="body">Description</label>
+  <textarea id="body" name="body">{{ issue.body }}</textarea>
+  <label for="status">Status</label>
+  <select id="status" name="status">
+    <option value="open">Open</option>
+    <option value="closed">Closed</option>
+  </select>
+  <button type="submit">Save issue</button>
+</form>
+{% endblock %}

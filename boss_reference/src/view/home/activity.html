@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block title %}Activity{% endblock %}
+{% block content %}
+<h1>Live issue activity</h1>
+<p>Open this page while another client changes an issue to observe WebSocket events.</p>
+<div id="activity-feed" data-project-id="">Waiting for activity events.</div>
+<ul id="activity-history">
+{% for issue in recent_issues %}
+  <li>{{ issue.status }}: {{ issue.title }}</li>
+{% endfor %}
+</ul>
+<script src="/reference.js"></script>
+{% endblock %}

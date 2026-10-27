@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{% block title %}Chicago Boss Reference{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+  <header>
+    <nav aria-label="Primary navigation">
+      <a href="{% url controller='home' action='index' %}">Reference dashboard</a>
+      <a href="{% url controller='projects' action='index' %}">Projects</a>
+      <a href="{% url controller='issues' action='index' %}">Issues</a>
+      <a href="{% url controller='home' action='activity' %}">Activity</a>
+      {% if user %}
+        <span>Signed in as {{ user.display_name }}</span>
+        <form name="logout_form" method="post" action="{% url controller='auth' action='logout' %}">
+          {{ csrf_token|safe }}
+          <button type="submit">Sign out</button>
+        </form>
+      {% else %}
+        <a href="{% url controller='auth' action='login' %}">Sign in</a>
+      {% endif %}
+    </nav>
+  </header>
+  {% for flash in boss_flash %}
+    <div class="flash" data-method="{{ flash.method }}">{{ flash.title }}: {{ flash.message }}</div>
+  {% endfor %}
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

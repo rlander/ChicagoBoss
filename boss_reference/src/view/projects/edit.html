@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}Edit project{% endblock %}
+{% block content %}
+<h1>Edit project</h1>
+{% include "partials/validation_errors.html" %}
+<form name="project_form" method="post" action="{% url controller='projects' action='edit' slug=project.slug %}">
+  {{ csrf_token|safe }}
+  <label for="name">Name</label>
+  <input id="name" name="name" value="{{ project.name }}" />
+  <label for="slug">Slug</label>
+  <input id="slug" name="slug" value="{{ project.slug }}" />
+  <button type="submit">Save project</button>
+</form>
+{% endblock %}

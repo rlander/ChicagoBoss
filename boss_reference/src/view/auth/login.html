@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block title %}Sign in{% endblock %}
+{% block content %}
+<h1>Sign in</h1>
+{% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+<form name="login_form" method="post" action="{% url controller='auth' action='login' %}">
+  {{ csrf_token|safe }}
+  <input type="hidden" name="return_to" value="{{ return_to }}" />
+  <label for="username">Username</label>
+  <input id="username" name="username" value="{{ username }}" autocomplete="username" />
+  <label for="password">Password</label>
+  <input id="password" name="password" type="password" autocomplete="current-password" />
+  <button type="submit">Sign in</button>
+</form>
+{% endblock %}

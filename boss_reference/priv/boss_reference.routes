@@ -1,0 +1,54 @@
+% Routes file.
+
+% Formats:
+%   {"/some/route", [{controller, "Controller"}, {action, "Action"}]}.
+%   {"/some/route", [{controller, "Controller"}, {action, "Action"}, {id, "42"}]}.
+%   {"/(some|any)/route/(\\d+)", [{controller, '$1'}, {action, "Action"}, {id, '$2'}]}.
+%   {"/some/route/(?<route_id>\\d+)", [{controller, "Controller"}, {action, "Action"}, {id, '$route_id'}]}.
+%   {"/some/route", [{application, some_app}, {controller, "Controller"}, {action, "Action"}, {id, "42"}]}.
+%
+%   {404, [{controller, "Controller"}, {action, "Action"}]}.
+%   {404, [{controller, "Controller"}, {action, "Action"}, {id, "42"}]}.
+%   {404, [{application, some_app}, {controller, "Controller"}, {action, "Action"}, {id, "42"}]}.
+%
+% Note that routing across applications results in a 302 redirect.
+
+% Front page
+% {"/", [{controller, "world"}, {action, "hello"}]}.
+
+% 404 File Not Found handler
+% {404, [{controller, "world"}, {action, "lost"}]}.
+
+% 500 Internal Error handler (only invoked in production)
+% {500, [{controller, "world"}, {action, "calamity"}]}.
+
+{"/", [{controller, "home"}, {action, "index"}]}.
+{"/activity", [{controller, "home"}, {action, "activity"}]}.
+{"/login", [{controller, "auth"}, {action, "login"}]}.
+{"/logout", [{controller, "auth"}, {action, "logout"}]}.
+{"/projects", [{controller, "projects"}, {action, "index"}]}.
+{"/projects/new", [{controller, "projects"}, {action, "create"}]}.
+{"/projects/(?<slug>[a-z0-9][a-z0-9-]*)/edit",
+ [{controller, "projects"}, {action, "edit"}, {slug, '$slug'}]}.
+{"/projects/(?<slug>[a-z0-9][a-z0-9-]*)",
+ [{controller, "projects"}, {action, "show"}, {slug, '$slug'}]}.
+{"/projects/(?<project_slug>[a-z0-9][a-z0-9-]*)/issues",
+ [{controller, "issues"}, {action, "index"},
+  {project_slug, '$project_slug'}]}.
+{"/projects/(?<project_slug>[a-z0-9][a-z0-9-]*)/issues/new",
+ [{controller, "issues"}, {action, "create"},
+  {project_slug, '$project_slug'}]}.
+{"/issues", [{controller, "issues"}, {action, "index"}]}.
+{"/issues/(?<id>boss_reference_issue-[0-9]+)",
+ [{controller, "issues"}, {action, "show"}, {id, '$id'}]}.
+{"/issues/(?<id>boss_reference_issue-[0-9]+)/edit",
+ [{controller, "issues"}, {action, "update"}, {id, '$id'}]}.
+{"/issues/(?<id>boss_reference_issue-[0-9]+)/close",
+ [{controller, "issues"}, {action, "close"}, {id, '$id'}]}.
+{"/issues/(?<id>boss_reference_issue-[0-9]+)/comments",
+ [{controller, "issues"}, {action, "comment"}, {id, '$id'}]}.
+{"/issues/(?<id>boss_reference_issue-[0-9]+)/labels",
+ [{controller, "issues"}, {action, "labels"}, {id, '$id'}]}.
+{"/api/issues/(?<id>boss_reference_issue-[0-9]+)",
+ [{controller, "issues"}, {action, "api"}, {id, '$id'}]}.
+{404, [{controller, "home"}, {action, "not_found"}]}.

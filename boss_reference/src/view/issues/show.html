@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block title %}{{ issue.title }}{% endblock %}
+{% block content %}
+<h1>{{ issue.title }}</h1>
+<p data-marker="issue-status">Status: {{ issue.status }}</p>
+<p>Project: <a href="{% url controller='projects' action='show' slug=project.slug %}">{{ project.name }}</a></p>
+<p>{{ issue.body }}</p>
+<h2>Labels</h2>
+<ul data-marker="issue-labels">
+{% for label in labels %}<li>{{ label.name }}</li>{% endfor %}
+</ul>
+{% if user %}
+  <p><a href="{% url controller='issues' action='update' id=issue.id %}">Edit issue</a></p>
+  <form name="close_issue_form" method="post" action="{% url controller='issues' action='close' id=issue.id %}">
+    {{ csrf_token|safe }}
+    <button type="submit">Toggle closed status</button>
+  </form>
+  <form name="label_form" method="post" action="{% url controller='issues' action='labels' id=issue.id %}">
+    {{ csrf_token|safe }}
+    <label for="label">Add label</label>
+    <input id="label" name="label" />
+    <button type="submit">Add label</button>
+  </form>
+{% endif %}
+<h2>Comments</h2>
+<ul data-marker="comment-list">
+{% for comment in comments %}
+  <li>{{ comment.author.display_name }}: {{ comment.body }}</li>
+{% endfor %}
+</ul>
+{% if user %}
+<form name="comment_form" method="post" action="{% url controller='issues' action='comment' id=issue.id %}">
+  {{ csrf_token|safe }}
+  <label for="body">Comment</label>
+  <textarea id="body" name="body"></textarea>
+  <button type="submit">Add comment</button>
+</form>
+{% endif %}
+{% endblock %}

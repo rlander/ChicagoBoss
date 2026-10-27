@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block title %}Reference dashboard{% endblock %}
+{% block content %}
+<h1>Chicago Boss reference application</h1>
+{% if user %}
+  <p data-marker="signed-in-user">Welcome, {{ user.display_name }}.</p>
+{% else %}
+  <p data-marker="anonymous-user">This dashboard is public. <a href="{% url controller='auth' action='login' %}">Sign in</a> to manage issues.</p>
+{% endif %}
+<dl>
+  <dt>Projects</dt><dd data-marker="project-count">{{ project_count }}</dd>
+  <dt>Open issues</dt><dd data-marker="open-issue-count">{{ open_issue_count }}</dd>
+</dl>
+<h2>Recent issues</h2>
+<ul>
+{% for issue in recent_issues %}
+  <li><a href="{% url controller='issues' action='show' id=issue.id %}">{{ issue.title }}</a> — {{ issue.status }}</li>
+{% endfor %}
+</ul>
+{% endblock %}

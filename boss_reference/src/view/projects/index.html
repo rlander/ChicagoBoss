@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block title %}Projects{% endblock %}
+{% block content %}
+<h1>Projects</h1>
+{% if user %}<p><a href="{% url controller='projects' action='create' %}">Create a project</a></p>{% endif %}
+<ul data-marker="project-list">
+{% for project in projects %}
+  <li><a href="{% url controller='projects' action='show' slug=project.slug %}">{{ project.name }}</a></li>
+{% endfor %}
+</ul>
+{% endblock %}
