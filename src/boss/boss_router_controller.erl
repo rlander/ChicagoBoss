@@ -188,8 +188,46 @@ unroute(Controller, Action, Params, State) ->
     _RoutedURL = case ets:lookup(State#state.reverse_routes_table_id,
             {State#state.application, Controller, Action, lists:keysort(1, Params)}) of
         [#boss_reverse_route{ url = Url }] -> Url;
+        [] -> unroute_named_route(Controller, Action, Params, State)
+    end.
+
+unroute_named_route(Controller, Action, Params, State) ->
+    Routes = [Route || Route = #boss_route{
+                              application = App,
+                              controller = RouteController,
+                              action = RouteAction,
+                              params = RouteParams} <-
+                          ets:tab2list(State#state.routes_table_id),
+                      App =:= State#state.application,
+                      RouteController =:= Controller,
+                      RouteAction =:= Action,
+                      named_route_params_present(RouteParams, Params)],
+    case lists:sort(fun(#boss_route{number = N1},
+                        #boss_route{number = N2}) -> N1 =< N2 end, Routes) of
+        [Route|_] -> substitute_named_route_params(Route#boss_route.url, Params);
         [] -> undefined
     end.
+
+named_route_params_present(RouteParams, Params) ->
+    lists:all(fun({Key, Value}) ->
+                      is_atom(Value) andalso
+                      lists:keymember(Key, 1, Params)
+              end, RouteParams).
+
+substitute_named_route_params(URL, Params) ->
+    lists:foldl(fun({Key, Value}, Acc) ->
+                        Pattern = "\\(\\?<" ++ atom_to_list(Key) ++
+                                  ">[^)]*\\)",
+                        Replacement = mochiweb_util:quote_plus(as_list(Value)),
+                        re:replace(Acc, Pattern, Replacement,
+                                   [{return, list}])
+                end, URL, Params).
+
+as_list(Value) when is_binary(Value) -> binary_to_list(Value);
+as_list(Value) when is_list(Value) -> Value;
+as_list(Value) when is_atom(Value) -> atom_to_list(Value);
+as_list(Value) when is_integer(Value) -> integer_to_list(Value);
+as_list(Value) -> lists:flatten(io_lib:format("~p", [Value])).
 
 get_all(State) ->
     _Res = lists:map(fun(#boss_route{ url = U, application = App, controller = C, action = A, params = P }) ->
@@ -269,4 +307,3 @@ index_and_extract_params(Params) ->
             {{Key, Value}, Acc}
     end, [], Params),
     {IndexedParams, lists:reverse(Vars)}.
-

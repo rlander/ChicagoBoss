@@ -81,7 +81,7 @@ accept_(RequestContext, Token) ->
     {ok, [{?CSRFTOKEN_NAME, Token} | RequestContext]}.
 
 reject_(Reason) ->
-    {error, {csrf, Reason}}.
+    {403, io_lib:format("CSRF validation failed: ~p", [Reason]), []}.
 
 
 csrftoken_name() ->
@@ -109,7 +109,7 @@ pre_check_csrf_token(RequestContext, CSRF_Token, NewToken) ->
             case sbw:post_param(?CSRFTOKEN_PARAM_NAME, Request) of
                 undefined ->
                     %% No CSRF Token in POST, let's check HEADERS
-                    case proplists:get_value(?CSRFTOKEN_HEADER, sbw:headers(Request)) of
+                    case request_header(?CSRFTOKEN_HEADER, sbw:headers(Request)) of
                         undefined -> reject_(no_csrf_token);
                         HTTPToken ->
                             check_csrf_token(RequestContext, HTTPToken, CSRF_Token, NewToken)
@@ -119,6 +119,17 @@ pre_check_csrf_token(RequestContext, CSRF_Token, NewToken) ->
                     check_csrf_token(RequestContext, PostToken, CSRF_Token, NewToken)
             end
     end.
+
+request_header(Name, Headers) when is_map(Headers) ->
+    HeaderName = case Name of
+        http_x_csrftoken ->
+            <<"x-csrftoken">>;
+        _ ->
+            list_to_binary(atom_to_list(Name))
+    end,
+    maps:get(HeaderName, Headers, undefined);
+request_header(Name, Headers) ->
+    proplists:get_value(Name, Headers).
 
 check_csrf_token(RequestContext, PostToken, CSRF_Token, NewToken) ->
     %% Check if token provided in request is same as we have in cookies

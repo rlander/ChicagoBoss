@@ -151,8 +151,11 @@ build_dynamic_response(App, Bridge, Url, RouterAdapter) ->
     ErrorArgs        = [RequestMethod, FullUrl, App, StatusCode, Time div 1000],
     log_status_code(StatusCode, ErrorFormat, ErrorArgs),
     Response1        = sbw:set_status_code(StatusCode, Bridge),
-    Response2        = lists:foldl(fun({K, V}, Acc) ->
-                          sbw:set_header(K, V, Acc)
+    Response2        = lists:foldl(fun
+                          ({set_cookie, Name, Value, Options}, Acc) ->
+                              sbw:set_cookie(Name, Value, Options, Acc);
+                          ({K, V}, Acc) ->
+                              sbw:set_header(K, V, Acc)
                       end,
                       Response1,
                       Headers),
@@ -347,7 +350,7 @@ add_session_to_headers(Req, Headers, SessionID) ->
                         {http_only, boss_env:get_env(session_cookie_http_only, true)}
                        ],
     SessionKey        = boss_session:get_session_key(),
-    lists:merge(Headers, [mochiweb_cookies:cookie(SessionKey, SessionID, CookieOptions)]).
+    [{set_cookie, SessionKey, SessionID, CookieOptions} | Headers].
 
 
 %TODO: Refactor this
