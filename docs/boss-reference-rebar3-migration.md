@@ -158,9 +158,12 @@ Response2 = lists:foldl(fun
 end, Response1, Headers).
 ```
 
-Session headers are represented as `{set_cookie, Name, Value, Options}` by
-`add_session_to_headers/3`. This preserves the public HTTP behavior and makes
-the CSRF/login/logout smoke pass.
+Session and CSRF cookies are represented as
+`{set_cookie, Name, Value, Options}` before response normalization. This keeps
+cookie semantics in Simple Bridge's native cookie path for Cowboy and other
+backends; serialized Mochiweb `Set-Cookie` headers are not passed through the
+generic response-header path. This preserves the public HTTP behavior and
+makes browser and CSRF/login/logout smoke checks agree.
 
 ### `erlmc`
 

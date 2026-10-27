@@ -23,6 +23,8 @@ grep -q 'csrfmiddlewaretoken' "$login_body"
 
 csrf="$(sed -n 's/^set-cookie: csrf_token=\([^;]*\).*/\1/p' "$login_headers" | head -1)"
 session="$(sed -n 's/^set-cookie: _boss_session=\([^;]*\).*/\1/p' "$login_headers" | head -1)"
+test -n "$csrf"
+test -n "$session"
 cookie="csrf_token=$csrf; _boss_session=$session"
 
 protected_body="$TMP_ROOT/protected.body"
