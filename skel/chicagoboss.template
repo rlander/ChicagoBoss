@@ -3,7 +3,7 @@
     {name, "bossapp", "The OTP application name"},
     {desc, "A Chicago Boss application", "The application description"},
     {boss_url, "https://github.com/rlander/ChicagoBoss.git", "The immutable Boss Git remote"},
-    {boss_ref, "fc93f9f", "The exact Boss Git revision"},
+    {boss_ref, "9395d334120f49d6dc8c485582f49d4fb405ed9c", "The exact Boss Git revision"},
     {port, "18001", "The isolated HTTP port used by the generated app"}
 ]}.
 {dir, "{{name}}"}.
