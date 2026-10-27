@@ -176,9 +176,9 @@ creates:
 
 The old copied Rebar, Makefile, shell bootstrap files, boss.config, and
 custom plugin are not emitted. The application obtains Boss through its
-generated dependency declaration. The template pins both the Boss
-implementation and the provider to the immutable feature-branch revision
-`9395d334120f49d6dc8c485582f49d4fb405ed9c`. That revision must remain
+generated dependency declaration. The template pins the Boss implementation
+to `ab891ee10f6414cb032117dba4db5482b2e4a309` and the provider separately to
+`9395d334120f49d6dc8c485582f49d4fb405ed9c`. Both revisions must remain
 reachable on the configured remote before an external clone can resolve the
 generated application's exact feature-branch workflow.
 

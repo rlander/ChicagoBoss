@@ -177,7 +177,7 @@ Every entry has an exact ref. The important direct entries are:
 
 | Application | Remote | SHA/ref |
 | --- | --- | --- |
-| boss | `https://github.com/rlander/ChicagoBoss.git` | `9395d334120f49d6dc8c485582f49d4fb405ed9c` |
+| boss | `https://github.com/rlander/ChicagoBoss.git` | `ab891ee10f6414cb032117dba4db5482b2e4a309` |
 | boss_db | `https://github.com/ErlyORM/boss_db.git` | `40aad5dea36fbada2c9e99f73d8bd8180c01cf30` |
 | tinymq | `https://github.com/ChicagoBoss/tinymq.git` | `24e8b52d679921c89144deda999039ca52c846f1` |
 | erlydtl | `https://github.com/erlydtl/erlydtl.git` | `118c176f61a0c466516c30502a1498ae3c40b545` |
