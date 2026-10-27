@@ -296,7 +296,11 @@ apply_function_with_default(Module, Function, Args, Default) when is_tuple(Modul
     ModuleAtom = element(1, Module),
     case proplists:get_value(Function, ModuleAtom:module_info(exports)) of
         N when N =:= 1 + length(Args) ->
-            erlang:apply(Module, Function, Args);
+            %% Parameterized modules receive their instance tuple as the
+            %% final argument in the generated callback function. Passing
+            %% the tuple itself to erlang:apply/3 is rejected by newer OTP
+            %% releases and prevents WebSocket services from starting.
+            erlang:apply(ModuleAtom, Function, Args ++ [Module]);
         _ ->
             Default
     end.

@@ -16,7 +16,13 @@
 convert_params_to_tokens(Variables, ControllerModule, Action) ->
     DummyController = apply(ControllerModule, new, lists:seq(1, proplists:get_value(new, ControllerModule:module_info(exports)))),
     Routes = case lists:member({'_routes', 1}, ControllerModule:module_info(exports)) of
-        true -> DummyController:'_routes'();
+        true ->
+            %% Parameterized-module callbacks are exported with the
+            %% instance tuple as their final argument. Calling the tuple as
+            %% the module argument works only through compiler syntax and
+            %% fails when invoked with erlang:apply/3 on newer OTP releases.
+            erlang:apply(element(1, DummyController), '_routes',
+                         [DummyController]);
         false -> []
     end,
     lists:foldr(fun

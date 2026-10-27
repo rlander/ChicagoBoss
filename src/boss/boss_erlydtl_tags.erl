@@ -66,9 +66,19 @@ url(Variables, Options) ->
     RouterAdapter = boss_env:router_adapter(),
     URL = RouterAdapter:unroute(RouterPid, LinkedAppAtom, ControllerList, LinkedController, Action, NoUndefinedVars),
     BaseURL = case proplists:get_value(base_url, Options) of
-        undefined -> boss_web:base_url(LinkedAppAtom);
-        "" -> boss_web:base_url(LinkedAppAtom);
+        undefined -> base_url_or_empty(LinkedAppAtom);
+        %% The in-process functional harness intentionally uses an empty
+        %% base URL and does not start the boss_web gen_server. Treat that
+        %% value as an explicit empty prefix instead of making a runtime
+        %% lookup that cannot succeed in the harness.
+        "" -> "";
         ProvidedBaseURL ->
             ProvidedBaseURL
     end,
     ProtocolPlusDomain ++ BaseURL ++ URL.
+
+base_url_or_empty(App) ->
+    case catch boss_web:base_url(App) of
+        {'EXIT', _} -> "";
+        BaseURL -> BaseURL
+    end.

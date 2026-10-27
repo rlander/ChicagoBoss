@@ -28,12 +28,23 @@ init(State) ->
 do(State) ->
     case application_name(State) of
         {ok, AppName} ->
-            case is_legacy_application() of
+            case is_project_application(State, AppName) andalso
+                 is_legacy_application() of
                 true -> compile_legacy_application(State, AppName);
                 false -> {ok, State}
             end;
         {error, not_found} ->
             {ok, State}
+    end.
+
+is_project_application(State, AppName) ->
+    case rebar_state:current_app(State) of
+        undefined ->
+            true;
+        CurrentApp ->
+            CurrentName = rebar_app_info:name(CurrentApp),
+            CurrentName =:= AppName orelse
+            CurrentName =:= list_to_binary(atom_to_list(AppName))
     end.
 
 format_error({chicago_boss_compile_failed, AppName, Reason}) ->
