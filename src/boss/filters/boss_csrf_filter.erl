@@ -72,8 +72,12 @@ after_filter({Whatever, Content, Headers}, _, RequestContext) ->
                         {secure, boss_env:get_env(session_cookie_secure, false)},
                         {http_only, boss_env:get_env(session_cookie_http_only, true)}
                        ],
-    Cookie = mochiweb_cookies:cookie(?CSRFTOKEN_NAME, Token, CookieOptions),
-    {Whatever, Content, [Cookie | Headers]};
+    %% Keep the cookie structured until the Simple Bridge response adapter
+    %% serializes it. Passing a preformatted Mochiweb Set-Cookie header
+    %% through the generic header path is not portable across backends and
+    %% prevents the Cowboy adapter from registering the response cookie.
+    {Whatever, Content,
+     [{set_cookie, ?CSRFTOKEN_NAME, Token, CookieOptions} | Headers]};
 after_filter(Other, _, _) ->
     Other.
 
