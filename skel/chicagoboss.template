@@ -25,6 +25,8 @@
 {template, "src/project.app.src", "{{name}}/src/{{name}}.app.src"}.
 {template, "config/sys.config", "{{name}}/config/sys.config"}.
 {template, "config/vm.args", "{{name}}/config/vm.args"}.
+{template, "config/sys.dev.config", "{{name}}/config/sys.dev.config"}.
+{template, "config/vm.dev.args", "{{name}}/config/vm.dev.args"}.
 {template, "src/controller/health_controller.erl", "{{name}}/src/controller/{{name}}_health_controller.erl"}.
 {template, "src/view/health/index.html", "{{name}}/src/view/health/index.html"}.
 {template, "src/view/lib/filter_modules/custom_filters.erl", "{{name}}/src/view/lib/filter_modules/{{name}}_custom_filters.erl"}.

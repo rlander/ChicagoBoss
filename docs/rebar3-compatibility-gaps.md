@@ -38,20 +38,48 @@ rebar3 compile
 rebar3 shell
 ```
 
-The current skeleton does not yet add `-s reloader` to a development-only VM
-arguments file or set `boss:developing_app`. Rebar3 itself does not watch files.
-Consequently, `rebar3 shell` starts the application in the foreground, but
-automatic source reload is not currently equivalent to the old `init-dev.sh`
-workflow. Changes normally require:
+The development shell selects `config/sys.dev.config`, which sets
+`boss.developing_app`. `boss_app` starts the locked MochiWeb `reloader` before
+the Boss supervisor starts. `boss_files_util:ebin_dir/0` resolves the active
+Rebar3 application ebin directory and retains the historical root `ebin/`
+fallback. `boss_env` selects development mode only when both the reloader
+module and an explicit `boss.developing_app` are present; this matters for
+embedded releases, which can load MochiWeb's module list without starting the
+reloader. The legacy request-time loaders continue to compile and load
+controllers, models, libraries, and views.
+
+Rebar3 3.15.2 does not apply the `vm_args` key from the shell configuration,
+so `config/vm.dev.args` is retained for alternate launchers and is not the
+canonical mechanism used by `rebar3 shell`. Rebar3 itself does not compile
+source on every filesystem change; ChicagoBoss's historical request-time
+loaders and MochiWeb's BEAM reloader provide the development behavior.
+
+Production releases continue to use `config/sys.config` and `config/vm.args`
+without `developing_app` or `-s reloader`.
+
+The current Rebar3 shell also loads Rebar3's host modules in the same VM. The
+historical reloader reports repeated `enotdir` file-info messages for those
+host-module pseudo-paths; this is a tooling-log boundary and does not prevent
+application reload. It must remain classified separately from application
+compile or runtime failures.
+
+The unchanged Common Test suite remains a separate maintenance issue. Its
+`boss_mq` setup and historical `poll/2` tuple expectation are not changed by
+the reload implementation.
+
+Before development reload was restored, changes required:
 
 ```sh
 rebar3 compile
 # restart rebar3 shell
 ```
 
-A future development-mode change should add and test a dev-only configuration
-that starts MochiWeb's `reloader`, sets the developing application, and leaves
-production releases unaffected.
+The dev-only configuration now starts MochiWeb's `reloader`, sets the
+developing application, and leaves production releases unaffected. The
+historical reloader watches loaded BEAM files; ChicagoBoss's request-time
+loaders remain responsible for source compilation. Route, translation, and
+init-script refresh APIs remain explicit boundaries rather than promises of
+automatic filesystem reload.
 
 
 Controller source compatibility
@@ -148,7 +176,7 @@ The main build lifecycle has direct Rebar3 commands:
 | `make test` / Rebar EUnit | `rebar3 eunit` | Supported |
 | Rebar Common Test | `rebar3 ct` | Supported with known suite failure |
 | `make app PROJECT=x` | `rebar3 new chicagoboss x` | Supported, with reproducible dependency behavior |
-| `start-dev` | `rebar3 shell` | Supported, without automatic reload parity |
+| `start-dev` | `rebar3 shell` | Supported; development auto-reload restored |
 | `start-fg` | release `bin/<app> foreground` | Supported |
 | `start` / `stop` / `restart` | release `bin/<app> start/stop/restart` | Supported |
 | `attach` | release `bin/<app> remote_console` | Supported |

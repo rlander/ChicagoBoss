@@ -36,8 +36,13 @@ Compatibility and known limitations
   are excluded from the default release startup closure.
 - The historical `mimetypes` dependency remains temporarily supported through
   a Rebar3 post-compile hook and release overlay.
-- Automatic development source reload is not yet equivalent to the old
-  `init-dev.sh` behavior.
+- Restored development source reload through `rebar3 shell`: the dev sys
+  config selects `boss.developing_app`, `boss_app` starts MochiWeb's historical
+  reloader, and the legacy dynamic loaders target the Rebar3 application ebin
+  directory. Production releases remain unaffected.
+- Rebar3 3.15.2 does not consume shell `vm_args`; the dev VM-args template is
+  retained for alternate launchers, while the canonical shell startup is
+  handled by `boss_app`.
 - The unchanged Common Test suite still has its known `boss_mq` setup and
   result-shape failure; test maintenance is intentionally separate.
 - Legacy Windows batch wrappers were removed. Native Windows execution of the

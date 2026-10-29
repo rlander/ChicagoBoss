@@ -26,8 +26,11 @@ are intentionally not part of the active workflow. Dependencies are resolved
 by Rebar3 and recorded in `rebar.lock`; no dependency tree is copied into this
 directory.
 
-The server listens at `http://127.0.0.1:8001/`. Boot it through a Rebar3
-shell or release after compiling. The startup fixture module seeds the
+The server listens at `http://127.0.0.1:8001/`. Boot it through `rebar3 shell`
+for development or a release for production after compiling. The development
+shell starts MochiWeb's historical `reloader` and uses the legacy dynamic
+loaders, so controller, view, library, and model edits can be exercised
+without restarting the VM. The startup fixture module seeds the
 owner/member, project, issues, comment, labels, and join rows.
 
 Fixture credentials are intentionally non-secret test data: `owner / owner`

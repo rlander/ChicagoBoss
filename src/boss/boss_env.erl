@@ -25,9 +25,12 @@ boss_env() ->
 
 -spec setup_boss_env() -> types:execution_mode().
 setup_boss_env() ->
-    case boss_load:module_is_loaded(reloader) of
-        true  -> put(boss_environment, development), development;
-        false -> put(boss_environment, production), production
+    case {boss_load:module_is_loaded(reloader),
+          boss_env:get_env(developing_app, undefined)} of
+        {true, AppName} when is_atom(AppName), AppName =/= undefined ->
+            put(boss_environment, development), development;
+        _ ->
+            put(boss_environment, production), production
     end.
 
 -spec get_env(atom(),atom(),any()) -> any().
