@@ -58,10 +58,13 @@ Production releases continue to use `config/sys.config` and `config/vm.args`
 without `developing_app` or `-s reloader`.
 
 The current Rebar3 shell also loads Rebar3's host modules in the same VM. The
-historical reloader reports repeated `enotdir` file-info messages for those
-host-module pseudo-paths; this is a tooling-log boundary and does not prevent
-application reload. It must remain classified separately from application
-compile or runtime failures.
+historical reloader would report repeated `enotdir` file-info messages for
+those host-module pseudo-paths. The tracked compatibility copy at
+`priv/rebar3/reloader.erl` adds one narrow `enotdir` clause to the historical
+watcher and is compiled over MochiWeb's locked `reloader.beam` by the Rebar3
+compile hook. The expected pseudo-path result is therefore quiet, while all
+other file-info errors remain logged. The dependency revision and reload
+semantics are unchanged; this is only a Rebar3 host-path compatibility fix.
 
 The unchanged Common Test suite remains a separate maintenance issue. Its
 `boss_mq` setup and historical `poll/2` tuple expectation are not changed by
