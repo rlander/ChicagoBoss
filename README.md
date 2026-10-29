@@ -44,7 +44,8 @@ rebar3 ct
 ```
 
 The generated project contains its own exact Boss Git dependency and uses
-`config/sys.config` and `config/vm.args`; it does not copy this checkout or a
+`config/sys.config` and `config/vm.args` for releases; its development shell
+uses `config/sys.dev.config` and does not copy this checkout or a
 prebuilt dependency directory. The `boss_url` and `boss_ref` template
 variables can be overridden for an isolated local-mirror validation run.
 
@@ -62,15 +63,18 @@ Start a generated application in the foreground with the Rebar3 shell:
 rebar3 shell
 ```
 
-The shell uses `config/sys.config` and `config/vm.args`, and the default
-generated HTTP port is `18001`. Visit `http://127.0.0.1:18001/health` after
-the application starts.
+The shell uses `config/sys.dev.config`, and the default generated HTTP port is
+`18001`. Visit `http://127.0.0.1:18001/health` after the application starts.
+The development config sets `boss.developing_app`; `boss_app` starts the
+historical MochiWeb `reloader` before the framework initializes. Controller,
+view, library, and model changes are then compiled/loaded through the legacy
+development loader without restarting the VM.
 
-`rebar3 shell` replaces the historical `init-dev.sh` command, but it does not
-currently reproduce the old automatic source reloader. The old startup script
-explicitly started MochiWeb's `reloader` process and selected a developing
-application. Changes to application source therefore require a fresh compile
-and restart until development reloading is restored.
+Rebar3 3.15.2 loads the shell sys config but does not apply a `vm_args` entry
+from `rebar.config`. `config/vm.dev.args` is retained for alternate launchers;
+the canonical `rebar3 shell` path starts the reloader from `boss_app` instead.
+Production releases continue to use `config/sys.config` and `config/vm.args`
+and do not enable development reload.
 
 
 Releases
