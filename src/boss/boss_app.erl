@@ -26,7 +26,7 @@ start(_Type, _StartArgs) ->
             {error, {reloader_start_failed, Reason}}
     end.
 
-%% Rebar3 3.15.2 loads the shell sys.config but does not pass a configured
+%% Rebar3's shell loads the shell sys.config but does not pass a configured
 %% vm_args file to the shell VM. Start the historical MochiWeb reloader from
 %% the Boss application callback instead, and only when the application has
 %% explicitly selected a developing app. This preserves production startup.

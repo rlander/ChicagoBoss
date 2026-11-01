@@ -10,8 +10,8 @@ deterministic and do not require an external database.
 
 ## Rebar3 workflow
 
-Run these commands from this directory with OTP 21.3.8.24 and the repository's
-pinned Rebar3 3.15.2 executable on `PATH`:
+Run these commands from this directory with OTP 25.3.2.21 and the repository's
+pinned Rebar3 3.22.1 executable on `PATH`:
 
 ```sh
 rebar3 compile

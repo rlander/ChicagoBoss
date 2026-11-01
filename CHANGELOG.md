@@ -11,8 +11,9 @@ Build and packaging
 
 - Migrated the active build, test, generated-application, release, and tar
   workflows to Rebar3.
-- Established Erlang/OTP 21.3.8.24 and Rebar3 3.15.2 as the validated
-  baseline toolchain.
+- Established Erlang/OTP 25.3.2.21 and Rebar3 3.22.1 as the active validated
+  toolchain. The OTP 21.3.8.24/Rebar3 3.15.2 result remains archived as the
+  historical baseline.
 - Added checked-in dependency resolution through `rebar.lock`.
 - Added generated-application configuration through `config/sys.config` and
   `config/vm.args`.
@@ -40,7 +41,7 @@ Compatibility and known limitations
   config selects `boss.developing_app`, `boss_app` starts MochiWeb's historical
   reloader, and the legacy dynamic loaders target the Rebar3 application ebin
   directory. Production releases remain unaffected.
-- Rebar3 3.15.2 does not consume shell `vm_args`; the dev VM-args template is
+- Rebar3 3.22.1 does not consume shell `vm_args`; the dev VM-args template is
   retained for alternate launchers, while the canonical shell startup is
   handled by `boss_app`.
 - The unchanged Common Test suite still has its known `boss_mq` setup and
