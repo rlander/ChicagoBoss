@@ -17,23 +17,46 @@
 
 
 load_view_inner_test() ->
-    Inner    = boss_load:load_views_inner(test, ".", self()),
-    ?assert(is_function(Inner, 2)),
-    [DtlModule] = Inner("test/good.dtl", []),
-    ?assertEqual(test_good_dtl, DtlModule),
-    Exports     = DtlModule:module_info(exports),
-    ?assertEqual([0,1,2], proplists:get_all_values(render, Exports)).
+    with_view_output_dir(fun(OutDir) ->
+        Inner    = boss_load:load_views_inner(test, OutDir, self()),
+        ?assert(is_function(Inner, 2)),
+        [DtlModule] = Inner("test/good.dtl", []),
+        ?assertEqual(test_good_dtl, DtlModule),
+        Exports     = DtlModule:module_info(exports),
+        ?assertEqual([0,1,2], proplists:get_all_values(render, Exports))
+    end).
 
 load_view_inner_bad_test() ->
-    Inner    = boss_load:load_views_inner(test, ".", self()),
-    ?assert(is_function(Inner, 2)),
-    ?assertEqual([[{"test/bad.dtl",[{{1,11},erlydtl_scanner,{illegal_char,125}}]}]],Inner("test/bad.dtl", [])).
+    with_view_output_dir(fun(OutDir) ->
+        Inner    = boss_load:load_views_inner(test, OutDir, self()),
+        ?assert(is_function(Inner, 2)),
+        ?assertEqual([[{"test/bad.dtl",[{{1,11},erlydtl_scanner,{illegal_char,125}}]}]],Inner("test/bad.dtl", []))
+    end).
 
 
 load_view_inner_no_file_test() ->
-    Inner    = boss_load:load_views_inner(test, ".", self()),
-    ?assert(is_function(Inner, 2)),
-    ?assertEqual([test], Inner("test/no_file.dtl", [test])).
+    with_view_output_dir(fun(OutDir) ->
+        Inner    = boss_load:load_views_inner(test, OutDir, self()),
+        ?assert(is_function(Inner, 2)),
+        ?assertEqual([test], Inner("test/no_file.dtl", [test]))
+    end).
+
+
+with_view_output_dir(Fun) ->
+    TmpRoot = case os:getenv("TMPDIR") of
+                  false -> "/tmp";
+                  Value -> Value
+              end,
+    OutDir = filename:join(TmpRoot,
+                           "chicagoboss-boss-load-test-" ++
+                           integer_to_list(erlang:unique_integer([positive]))),
+    ok = filelib:ensure_dir(filename:join(OutDir, "placeholder")),
+    try
+        Fun(OutDir)
+    after
+        file:delete(filename:join(OutDir, "test_good_dtl.beam")),
+        file:del_dir(OutDir)
+    end.
 
 
 
