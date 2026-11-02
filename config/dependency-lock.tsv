@@ -15,7 +15,7 @@ erlando	https://github.com/ChicagoBoss/erlando.git	ref:680688f	680688f246d84a2be
 erlmc	https://github.com/ErlyORM/erlmc.git	ref:c5280da	c5280dadc6b64912e100d812a4aa95de8dea4636	IMMUTABLE	boss_db transitive
 erlydtl	https://github.com/erlydtl/erlydtl.git	ref:118c176	118c176f61a0c466516c30502a1498ae3c40b545	IMMUTABLE	ChicagoBoss direct
 ets_cache	https://github.com/cuongth/ets_cache.git	ref:c7a17204cd	c7a17204cd9602b677540e9c73d10e6f6f7da146	IMMUTABLE	boss_db transitive
-gen_smtp	https://github.com/Vagabond/gen_smtp.git	tag:0.11.0	2ea8bb995adf32102f523cef93ae98e287ac77d1	IMMUTABLE	ChicagoBoss direct
+gen_smtp	https://github.com/gen-smtp/gen_smtp.git	tag:0.14.0	49a907102021c836fcbc7db0e43f71133b77452f	IMMUTABLE	ChicagoBoss direct; renamed private socket module for OTP 26 Relx packaging
 goldrush	https://github.com/DeadZen/goldrush.git	tag:0.1.9	8f1b715d36b650ec1e1f5612c00e28af6ab0de82	IMMUTABLE	lager transitive
 ibrowse	https://github.com/cmullaparthi/ibrowse.git	tag:v4.4.1	ffe353054e964ac103d38a49a4950b5805927d93	IMMUTABLE	ddb transitive
 iso8601	https://github.com/danikp/erlang_iso8601.git	ref:ae6a052017	ae6a052017f44f995102f73993289e892af16c5d	IMMUTABLE	ChicagoBoss direct
