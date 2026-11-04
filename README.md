@@ -2,8 +2,8 @@ Chicago Boss: Start small, dream big
 ====================================
 [![Build Status](https://travis-ci.org/ChicagoBoss/ChicagoBoss.svg?branch=master)](https://travis-ci.org/ChicagoBoss/ChicagoBoss)
 
-This branch is maintained and validated with Erlang/OTP 25.3.2.21 and Rebar3
-3.22.1. The immutable dependency resolution is recorded in `rebar.lock`.
+This branch is maintained and validated with Erlang/OTP 28.5.0.8 and Rebar3
+3.28.0. The immutable dependency resolution is recorded in `rebar.lock`.
 
 Chicago Boss is a server framework inspired by Rails and written in Erlang. It
 offers all the conveniences of modern web development, including Comet. What sets
@@ -70,7 +70,7 @@ historical MochiWeb `reloader` before the framework initializes. Controller,
 view, library, and model changes are then compiled/loaded through the legacy
 development loader without restarting the VM.
 
-Rebar3 3.22.1 loads the shell sys config but does not apply a `vm_args` entry
+Rebar3 3.28.0 loads the shell sys config but does not apply a `vm_args` entry
 from `rebar.config`. `config/vm.dev.args` is retained for alternate launchers;
 the canonical `rebar3 shell` path starts the reloader from `boss_app` instead.
 Production releases continue to use `config/sys.config` and `config/vm.args`
@@ -124,17 +124,17 @@ letter and contain only letters, digits, and underscores (for easy compatibility
 Dependencies
 ------------
 
-* Erlang/OTP 25.3.2.21 -
+* Erlang/OTP 28.5.0.8 -
 
     <http://www.erlang.org/download.html>
 
   * Check with `erlang:system_info(otp_release)`.
 
-* Rebar3 3.22.1 -
+* Rebar3 3.28.0 -
 
   * Check with `rebar3 --version`.
   * The active `tools/rebar3` executable is pinned to this version and runs
-    with the OTP 25.3.2.21 toolchain. The historical OTP 21.3.8.24 workflow
+    with the OTP 28.5.0.8 toolchain. The historical OTP 21.3.8.24 workflow
     remains available through `tools/rebar3-3.15.2` and its archived evidence.
 
 The exact dependency revisions are recorded in `rebar.lock` and the human
