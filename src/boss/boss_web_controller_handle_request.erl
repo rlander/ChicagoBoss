@@ -33,10 +33,10 @@ handle_request(Bridge, RouterAdapter) ->
 
     try
        handle_application(Bridge, FullUrl, ApplicationForPath, RouterAdapter)
-    catch Class:Error ->
+    catch Class:Error:Stacktrace ->
         %% Nuclear option: Something very serious happened and we don't want to
         %% fail silently, but instead it should generate an error message.
-        _ = lager:error("Unhandled Error: ~s", [boss_log_util:stacktrace(Class, Error)]),
+        _ = lager:error("Unhandled Error: ~s", [boss_log_util:stacktrace(Class, Error, Stacktrace)]),
         handle_fatal_error(Bridge)
     end.
 

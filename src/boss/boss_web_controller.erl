@@ -304,8 +304,8 @@ call_controller_action(Adapter, AdapterInfo, RequestContext) ->
     try
         Adapter:action(AdapterInfo, RequestContext)
     catch
-        Class:Error ->
-            _ = lager:error("Error in controller ~s", [boss_log_util:stacktrace(Class, Error)]),
+        Class:Error:Stacktrace ->
+            _ = lager:error("Error in controller ~s", [boss_log_util:stacktrace(Class, Error, Stacktrace)]),
             {error, "Error in controller, see console.log for details\n"}
     end.
 

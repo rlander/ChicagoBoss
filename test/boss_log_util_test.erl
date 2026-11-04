@@ -27,6 +27,16 @@ gen_trace_with_location(Arg1, Arg2) ->
      {other_module, other_func, Arg2, [{file, "deep_thought.erl"}, {line, 1337}]}
     ].
 
+stacktrace_capture_test() ->
+    application:set_env(boss, log_stack_multiline, false),
+    Value = try
+                erlang:error(otp28_stacktrace_test)
+            catch
+                Class:Reason:Stacktrace ->
+                    lists:flatten(boss_log_util:stacktrace(Class, Reason, Stacktrace))
+            end,
+    ?assert(lists:prefix("error:otp28_stacktrace_test Stacktrace: [", Value)).
+
 default_stacktrace_format_with_location_test() ->
     application:set_env(boss, log_stack_multiline, false),
     ?assertEqual(
