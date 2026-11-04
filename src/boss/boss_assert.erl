@@ -48,7 +48,7 @@
 -type http_server_error_code() :: 500..511.
 -type http_status_code()       :: http_information_code()|http_success_code()|http_redirect_code()|http_client_error_code()| http_server_error_code()|http_non_offical_code().
 -type http_status_result()     :: {boolean(), string()}.
--type maybe(X) :: X|undefined.
+-type maybe_value(X) :: X|undefined.
 
 -spec http_ok({http_status_code(),_,_,_})              -> http_status_result().
 -spec http_partial_content({http_status_code(),_,_,_}) -> http_status_result().
@@ -69,8 +69,8 @@
 -spec email_is_text_only({_,string(), string()}) -> http_status_result().
 -spec email_is_html_only({_,string(), string()}) -> http_status_result().
 -spec email_is_multipart({_,string(), string()}) -> http_status_result().
--spec email_received(maybe(string()))           -> http_status_result().
--spec email_not_received(maybe(string()))       -> http_status_result().
+-spec email_received(maybe_value(string()))           -> http_status_result().
+-spec email_not_received(maybe_value(string()))       -> http_status_result().
 -spec tag_with_text1([any()],[any()],maybe_improper_list() | tuple()) -> {'false',[any(),...]} | {'true',[any(),...]}.
 -spec link_with_text1([any()],maybe_improper_list() | tuple()) -> {'false',[any(),...]} | {'true',[any(),...]}.
 -spec has_tag_with_text(_,_,maybe_improper_list() | tuple()) -> boolean().
