@@ -297,8 +297,8 @@ render_with_template(Controller, Template, AppInfo, RequestContext,
     Err ->
         Err
     catch
-        Class:Error ->
-            lager:error("Error in view ~p ~s", [Module, boss_log_util:stacktrace(Class, Error)])
+        Class:Error:Stacktrace ->
+            lager:error("Error in view ~p ~s", [Module, boss_log_util:stacktrace(Class, Error, Stacktrace)])
     end.
 
 extract_content_language(RequestContext, Headers) ->

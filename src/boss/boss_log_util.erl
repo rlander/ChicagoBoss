@@ -11,18 +11,25 @@
 %%-------------------------------------------------------------------
 
 -module(boss_log_util).
--export([stacktrace/2]).
+-export([stacktrace/2, stacktrace/3]).
 
 -ifdef(TEST).
 -export([format_stacktrace/3]).
 -endif.
 
 -spec stacktrace(atom(), any()) -> [char()].
+-spec stacktrace(atom(), any(), list()) -> [char()].
 
 %% @doc Generates a stacktrace and formats it according to the boss_env setting
 %% log_stack_multiline.
 stacktrace(Class, Error) ->
-    format_stacktrace(Class, Error, erlang:get_stacktrace()).
+    %% The old API could only obtain the exception trace from inside a catch.
+    %% Framework callers use stacktrace/3; retain stacktrace/2 without calling
+    %% the removed OTP get_stacktrace/0 BIF.
+    format_stacktrace(Class, Error, []).
+
+stacktrace(Class, Error, Trace) ->
+    format_stacktrace(Class, Error, Trace).
 
 format_stacktrace(Class, Error, Trace) ->
     Multiline = boss_env:get_env(log_stack_multiline, false),
