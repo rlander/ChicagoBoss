@@ -34,7 +34,7 @@ by `provider_hooks` and is executed after ordinary compilation:
 {project_plugins, [
     {chicago_boss_rebar3,
      {git_subdir, "https://github.com/rlander/ChicagoBoss.git",
-                  {ref, "9395d334120f49d6dc8c485582f49d4fb405ed9c"},
+                  {ref, "38a892deeb1358f58d65f9c82220e1c5320c6883"},
                   "priv/rebar3/chicago_boss_rebar3"}}
 ]}.
 

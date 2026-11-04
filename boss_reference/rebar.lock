@@ -4,7 +4,7 @@
   1},
  {<<"boss">>,
   {git,"https://github.com/rlander/ChicagoBoss.git",
-       {ref,"f85e283cee34934bf12fe89df2e55f4d8ccd7c45"}},
+       {ref,"38a892deeb1358f58d65f9c82220e1c5320c6883"}},
   0},
  {<<"boss_db">>,
   {git,"https://github.com/rlander/boss_db.git",
