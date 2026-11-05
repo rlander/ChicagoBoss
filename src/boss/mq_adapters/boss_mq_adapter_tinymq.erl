@@ -18,8 +18,12 @@ start() ->
     start([]).
 
 start(_Options) ->
-    application:start(tinymq),
-    {ok, undefined}.
+    case application:ensure_all_started(tinymq) of
+        {ok, _Started} ->
+            {ok, undefined};
+        {error, Reason} ->
+            {error, Reason}
+    end.
 
 stop(_) ->
     application:stop(tinymq),

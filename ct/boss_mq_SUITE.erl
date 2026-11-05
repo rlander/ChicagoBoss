@@ -18,10 +18,15 @@ suite() ->
 
 
 init_per_suite(Config) ->
-    Config.
+    {ok, Pid} = boss_mq:start(),
+    unlink(Pid),
+    [{boss_mq_sup, Pid} | Config].
 
 
-end_per_suite(_Config) ->
+end_per_suite(Config) ->
+    Pid = proplists:get_value(boss_mq_sup, Config),
+    exit(Pid, shutdown),
+    application:stop(tinymq),
     ok.
 
 init_per_group(_GroupName, Config) ->
@@ -56,5 +61,5 @@ test_poll() ->
     [].
 test_poll(_Config) ->
     boss_mq:push("test", "Test Message"),
-    {ok, _T, "Test Message"} = boss_mq:poll("test", last),
+    {ok, _T, ["Test Message"]} = boss_mq:poll("test", last),
     ok.
