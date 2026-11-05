@@ -18,6 +18,35 @@ convert_to_ms_test() ->
     ?assertEqual(infinity, boss_mq:convert_to_ms(infinity)),
     ?assertEqual(1000, boss_mq:convert_to_ms(1)).
 
+tinymq_push_poll_test_() ->
+    {setup,
+        fun start_tinymq/0,
+        fun stop_tinymq/1,
+        fun(_Context) ->
+            fun() ->
+                Channel = "boss_mq_eunit_" ++ integer_to_list(erlang:unique_integer([positive])),
+                ?assertMatch({ok, _}, boss_mq:push(Channel, "Test Message")),
+                ?assertMatch({ok, _, ["Test Message"]}, boss_mq:poll(Channel, last))
+            end
+        end}.
+
+start_tinymq() ->
+    case global:whereis_name(boss_mq_sup) of
+        undefined ->
+            {ok, Pid} = boss_mq:start(),
+            unlink(Pid),
+            {started, Pid};
+        Pid ->
+            {already_started, Pid}
+    end.
+
+stop_tinymq({started, Pid}) ->
+    exit(Pid, shutdown),
+    application:stop(tinymq),
+    ok;
+stop_tinymq({already_started, _Pid}) ->
+    ok.
+
 
 % spec_test_() ->
 %     gen([

@@ -34,5 +34,5 @@ redo	https://github.com/heroku/redo.git	ref:cd75a11	cd75a11697d69e38b6e5e1750b7e
 simple_bridge	https://github.com/nitrogen/simple_bridge.git	ref:72fa9999aa	72fa9999aac804710f7be6f75f9d658203af6762	IMMUTABLE	ChicagoBoss direct; upstream OTP 27 else macro fix
 stacktrace_compat	https://github.com/g-andrade/stacktrace_compat	tag:1.0.1	fe6238499a216f6f94836be9ec0b3956ea5c6101	IMMUTABLE	simple_bridge transitive
 tiny_pq	https://github.com/ChicagoBoss/tiny_pq.git	tag:v0.9.0	5f13986299f0d81a26235cebcfb7ff87e207edfe	IMMUTABLE	boss_db transitive
-tinymq	https://github.com/ChicagoBoss/tinymq.git	tag:v0.9.0	24e8b52d679921c89144deda999039ca52c846f1	IMMUTABLE	ChicagoBoss direct
+tinymq	https://github.com/ChicagoBoss/tinymq.git	tag:v0.9.1	12fc8472442a46bc7130847625a68be33f88f181	IMMUTABLE	ChicagoBoss direct
 uuid	https://github.com/avtobiff/erlang-uuid.git	tag:v0.5.2	cb02a2039a9b29dd2eef0446039c9c6e164df9ef	IMMUTABLE	boss_db transitive
