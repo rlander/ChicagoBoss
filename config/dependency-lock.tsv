@@ -24,7 +24,7 @@ jsx	https://github.com/talentdeficit/jsx.git	tag:v2.9.0	fc2a001073f2300ba38427c2
 lager	https://github.com/erlang-lager/lager.git	tag:3.6.7	69b4ada2341b8ab2cf5c8e464ac936e5e4a9f62b	IMMUTABLE	boss_db transitive
 medici	https://github.com/ErlyORM/medici.git	ref:bb6167459d	bb6167459d19f48089b2bd46f753bf70fce495fe	IMMUTABLE	boss_db transitive
 mimetypes	https://github.com/spawngrid/mimetypes.git	ref:ee98c7603c5effb525551913745e7458c360ed70 (was branch:master)	ee98c7603c5effb525551913745e7458c360ed70	LOCKED_FROM_MOVING	ChicagoBoss direct; verified baseline/remediation commit
-mochiweb	https://github.com/mochi/mochiweb.git	ref:a8166065d4	a8166065d4a0e77d63879bb38e7ac70706cb04f9	IMMUTABLE	ChicagoBoss direct; upstream OTP 27 maybe atom fix
+mochiweb	https://github.com/mochi/mochiweb.git	tag:v3.5.0	52bc688521efb5b11d1faf9d0d38c14c31b03b5a	IMMUTABLE	ChicagoBoss direct; latest official release; requires OTP 23+
 mysql	https://github.com/ErlyORM/erlang-mysql-driver.git	tag:v0.0.4	5308a6536369739371baa21d42d29d8e417aacf2	IMMUTABLE	boss_db transitive
 pmod_transform	https://github.com/erlang/pmod_transform.git	ref:f96b8b572395581d58fe3dd7c3e61f3f0e8fa6dc (was transitive branch:master over git://)	f96b8b572395581d58fe3dd7c3e61f3f0e8fa6dc	LOCKED_FROM_MOVING	erlando transitive; HTTPS bootstrap URL
 poolboy	https://github.com/devinus/poolboy.git	tag:1.5.2	29be47db8c2be38b18c908e43a80ebb7b9b6116b	IMMUTABLE	boss_db transitive
