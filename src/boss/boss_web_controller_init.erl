@@ -80,7 +80,10 @@ init_master_node(Env, ThisNode) ->
                         {port,        boss_env:get_env(smtp_server_port, 25)},
                         {protocol,    boss_env:get_env(smtp_server_protocol, tcp)},
                         {sessionoptions, [{boss_env, Env}]}],
-                    gen_smtp_server:start({global, boss_smtp_server}, boss_smtp_server, [Options]);
+                    %% gen_smtp 1.3.0 uses Ranch listeners.  Its options are a
+                    %% flat proplist and the listener is addressed by its
+                    %% Ranch reference rather than a gen_server pid.
+                    gen_smtp_server:start(boss_smtp_server, boss_smtp_server, Options);
                 _ ->
                     ok
             end;
