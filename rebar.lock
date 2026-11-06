@@ -52,7 +52,7 @@
   1},
  {<<"gen_smtp">>,
   {git,"https://github.com/gen-smtp/gen_smtp.git",
-       {ref,"49a907102021c836fcbc7db0e43f71133b77452f"}},
+       {ref,"68ab11101a0710a13d39d73ff780dc9d76ffa15f"}},
   0},
  {<<"goldrush">>,
   {git,"https://github.com/DeadZen/goldrush.git",

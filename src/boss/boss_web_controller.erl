@@ -49,16 +49,10 @@ terminate(_Reason, #state{router_adapter=RouterAdapter}=State) ->
     application:stop(elixir).
 
 
-terminate_smtp(Pid) when is_pid(Pid) ->
-    gen_smtp_server:stop(Pid);
-terminate_smtp(_) ->
-    ok.
-
 stop_smtp() ->
     case boss_env:get_env(smtp_server_enable, false) of
         true ->
-            SMTPPid = global:whereis_name(boss_smtp_server),
-        terminate_smtp(SMTPPid);
+            gen_smtp_server:stop(boss_smtp_server);
         _ ->
             ok
     end.
