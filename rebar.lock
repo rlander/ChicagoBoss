@@ -88,7 +88,7 @@
   0},
  {<<"mochiweb">>,
   {git,"https://github.com/mochi/mochiweb.git",
-       {ref,"a8166065d4a0e77d63879bb38e7ac70706cb04f9"}},
+       {ref,"52bc688521efb5b11d1faf9d0d38c14c31b03b5a"}},
   0},
  {<<"mysql">>,
   {git,"https://github.com/ErlyORM/erlang-mysql-driver.git",
