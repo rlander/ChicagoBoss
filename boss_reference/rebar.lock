@@ -1,3 +1,4 @@
+{"1.2.0",
 [{<<"aleppo">>,
   {git,"https://github.com/ErlyORM/aleppo.git",
        {ref,"6049c5754918350af6202adf90ab71208732db12"}},
@@ -66,10 +67,7 @@
   {git,"https://github.com/cmullaparthi/ibrowse.git",
        {ref,"ffe353054e964ac103d38a49a4950b5805927d93"}},
   2},
- {<<"iso8601">>,
-  {git,"https://github.com/erlsci/iso8601.git",
-       {ref,"cc5a0c4bb8a94ac239f9c4c2c9d52b9e69bd31c5"}},
-  0},
+ {<<"iso8601">>,{pkg,<<"iso8601">>,<<"1.4.0">>},0},
  {<<"jaderl">>,
   {git,"https://github.com/erlydtl/jaderl.git",
        {ref,"14a80dafd92037d041dd352466fc3ddef5ae091e"}},
@@ -137,4 +135,10 @@
  {<<"uuid">>,
   {git,"https://github.com/avtobiff/erlang-uuid.git",
        {ref,"cb02a2039a9b29dd2eef0446039c9c6e164df9ef"}},
-  1}].
+  1}]}.
+[
+{pkg_hash,[
+ {<<"iso8601">>, <<"C4458582266F5ABC60E454A9C569C76DFA48524082E562F6C2CB2D36CECD6BA4">>}]},
+{pkg_hash_ext,[
+ {<<"iso8601">>, <<"59E9AC944942387D5A41741E73A8F630B8FB0D891997103761DFB330794E170C">>}]}
+].
