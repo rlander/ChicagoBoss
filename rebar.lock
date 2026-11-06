@@ -116,7 +116,7 @@
   1},
  {<<"simple_bridge">>,
   {git,"https://github.com/nitrogen/simple_bridge.git",
-       {ref,"72fa9999aac804710f7be6f75f9d658203af6762"}},
+       {ref,"b875e6adb74fb851702cb531f28740f035b26373"}},
   0},
  {<<"stacktrace_compat">>,
   {git,"https://github.com/g-andrade/stacktrace_compat",
