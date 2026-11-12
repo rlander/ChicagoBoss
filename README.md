@@ -134,11 +134,9 @@ Dependencies
 
   * Check with `rebar3 --version`.
   * The active `tools/rebar3` executable is pinned to this version and runs
-    with the OTP 28.5.0.8 toolchain. The historical OTP 21.3.8.24 workflow
-    remains available through `tools/rebar3-3.15.2` and its archived evidence.
+    with the OTP 28.5.0.8 toolchain.
 
-The exact dependency revisions are recorded in `rebar.lock` and the human
-readable manifest at `config/dependency-lock.tsv`.
+The exact dependency revisions are recorded in `rebar.lock`.
 
 `erlmc` remains in the locked transitive dependency graph because it is part of
 the historical `boss_db` closure. It is excluded from the default release
@@ -151,9 +149,9 @@ by the default release because it connects to an external Tokyo Tyrant service
 during application startup. Applications using that backend must configure and
 start it explicitly.
 
-The complete migration boundary, including options that were not carried over
-from the historical `boss.config`, is documented in
-[`docs/rebar3-compatibility-gaps.md`](docs/rebar3-compatibility-gaps.md).
+The active build and runtime configuration in this repository defines the
+supported Rebar3 migration boundary; historical modernization notes are kept
+outside the source repository.
 
 
 Admin Interface
