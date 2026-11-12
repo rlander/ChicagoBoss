@@ -1,5 +1,26 @@
 Testing with EUnit and Proper
 
+Current Rebar3 workflow
+-----------------------
+
+The current project uses Rebar3 for compilation and testing. From the Chicago
+Boss root directory, run the test suites separately:
+
+    rebar3 compile
+    rebar3 eunit
+    rebar3 ct
+
+EUnit tests are kept under `test/`; Common Test suites are kept under `ct/`.
+The two commands have separate output and failure reporting. The included
+Common Test suite starts `boss_mq` for its test and verifies the current
+`boss_mq:poll/2` result shape.
+
+Generated applications created from the supplied `skel` template use the same
+commands from the generated project directory.
+
+Historical property-test workflow
+----------------------------------
+
 I have been adding tests to ChicagoBoss and BossDB via Eunit and
 Proper. There are generally 2 types of tests unit tests with EUnit and
 property based tests with Proper.

@@ -1,6 +1,18 @@
 Using Elixir with Chicago Boss
 ==
 
+Current Rebar3 status
+--
+
+The Elixir compiler adapter remains in Chicago Boss, but Elixir and Ecto are
+not enabled by the default Rebar3 configuration or by the supplied skeleton.
+The current build workflow uses `rebar3`; the historical `./rebar`, `make app`,
+and manually copied dependency steps in this document are not part of the
+supported default setup. Applications that need Elixir must declare and pin a
+compatible Elixir toolchain and dependencies in their own `rebar.config`.
+
+The examples below describe the legacy integration and API.
+
 Elixir is a nifty new language for the Erlang VM which you can use in parts of
 your project instead of regular Erlang if you prefer.
 

@@ -10,6 +10,9 @@ CB supports three kinds of filters: before filters, middle filters, and
 after filters. A filter module can implement multiple kinds of filters as
 described below.
 
+In a Rebar3 application, filter configuration belongs in the `{boss, [...]}`
+section of `config/sys.config` (or `config/sys.dev.config` for development).
+
 
 ## Before filters
 
@@ -107,15 +110,15 @@ default filter list with the following three functions:
 That way you can rearrange, insert, or delete filters based on the current
 request.
 
-For now just put filter modules into your project's "lib" directory.
+For now put filter modules into your project's `src/lib/` directory.
 
 
 ## <a name="filter_configuration"></a>Filter configuration
 
 The `FilterConfig` argument passed to the filter functions is set in your
-boss.config and can be overridden by the controllers.
+application configuration and can be overridden by the controllers.
 
-To set a default config value for `my_awesome_filter` in your boss.config:
+To set a default config value for `my_awesome_filter` in `config/sys.config`:
 
     {boss, [
         {controller_filter_config, [

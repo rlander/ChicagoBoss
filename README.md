@@ -2,8 +2,10 @@ Chicago Boss: Start small, dream big
 ====================================
 [![Build Status](https://travis-ci.org/ChicagoBoss/ChicagoBoss.svg?branch=master)](https://travis-ci.org/ChicagoBoss/ChicagoBoss)
 
-This branch is maintained and validated with Erlang/OTP 28.5.0.8 and Rebar3
-3.28.0. The immutable dependency resolution is recorded in `rebar.lock`.
+This branch is maintained and validated with Erlang/OTP 29.1.2 and Rebar3
+3.28.0. The active dependency resolution is recorded in `rebar.lock`.
+The current dependency set requires OTP 23 or newer because MochiWeb 3.5.0
+is the pinned release.
 
 Chicago Boss is a server framework inspired by Rails and written in Erlang. It
 offers all the conveniences of modern web development, including Comet. What sets
@@ -11,7 +13,8 @@ Chicago Boss apart from other non-Erlang frameworks is that it can handle large
 amounts of traffic without any drop in performance. What sets Chicago Boss apart
 from other Erlang frameworks is that it is easy to set up and use.
 
-WARNING: Chicago Boss does not work with Erlang R16B03 due to an error in erl_syntax
+WARNING: The current dependency set requires Erlang/OTP 23 or newer. Older
+releases, including R16B03, are not supported.
 
 60-second Quickstart
 --------------------
@@ -24,12 +27,13 @@ root project can be checked first with:
 rebar3 compile
 rebar3 eunit
 rebar3 ct
+rebar3 release
+rebar3 tar
 ```
 
-The current Common Test suite is intentionally unchanged and currently fails
-because it expects `boss_mq` to be started by the test setup and still expects
-the historical `poll/2` result shape. EUnit is the passing unit-test command;
-Common Test remains a separate, documented test maintenance task.
+EUnit and Common Test are separate commands. The included Common Test suite
+starts `boss_mq` for its test and checks the current `poll/2` result shape.
+Run both suites when validating a checkout.
 
 Install the template and create an application with:
 
@@ -52,6 +56,12 @@ variables can be overridden for an isolated local-mirror validation run.
 The historical Makefile, bundled Rebar 2 executable, `rebar.config.script`,
 `boss.config`, `init.sh`, `init-dev.sh`, Windows batch wrappers, and Boss Rebar
 2 plugin are not part of the active build workflow.
+
+Rebar3 compiles the framework sources under `src/boss`. The Chicago Boss
+Rebar3 provider then runs the legacy loaders for parameterized controllers,
+BossRecord models, ErlyDTL views, route metadata, and generated application
+metadata. This preserves the historical application API without compiling
+those legacy source trees a second time.
 
 
 Development Server
@@ -124,17 +134,19 @@ letter and contain only letters, digits, and underscores (for easy compatibility
 Dependencies
 ------------
 
-* Erlang/OTP 28.5.0.8 -
+* Erlang/OTP 29.1.2 -
 
     <http://www.erlang.org/download.html>
 
-  * Check with `erlang:system_info(otp_release)`.
+  * The validated development toolchain is Erlang/OTP 29.1.2. Check with
+    `erlang:system_info(otp_release)`.
 
 * Rebar3 3.28.0 -
 
   * Check with `rebar3 --version`.
   * The active `tools/rebar3` executable is pinned to this version and runs
-    with the OTP 28.5.0.8 toolchain.
+    with the OTP 29.1.2 toolchain. Use `./tools/rebar3` when a system
+    installation is not available.
 
 The exact dependency revisions are recorded in `rebar.lock`.
 

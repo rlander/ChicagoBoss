@@ -1,7 +1,7 @@
 # ChicagoBoss Changelog
 
-This file records user-visible changes to Chicago Boss. Detailed migration
-evidence is kept in `docs/rebar3-migration.md`.
+This file records user-visible changes to Chicago Boss. Current build and usage
+details are kept in `README.md`.
 
 
 Unreleased
@@ -10,14 +10,17 @@ Unreleased
 Build and packaging
 
 - Migrated the active build, test, generated-application, release, and tar
-  workflows to Rebar3.
-- Established Erlang/OTP 25.3.2.21 and Rebar3 3.22.1 as the active validated
-  toolchain. The OTP 21.3.8.24/Rebar3 3.15.2 result remains archived as the
-  historical baseline.
-- Added checked-in dependency resolution through `rebar.lock`.
-- Added generated-application configuration through `config/sys.config` and
-  `config/vm.args`.
-- Replaced the historical Makefile, Rebar 2 executable, custom Rebar plugin,
+  workflows to Rebar3, with the Chicago Boss compiler provider retained under
+  `priv/rebar3/chicago_boss_rebar3` for legacy source compilation.
+- Established Erlang/OTP 29.1.2 and Rebar3 3.28.0 as the active validated
+  toolchain. The current dependency set requires OTP 23 or newer because
+  MochiWeb 3.5.0 is the pinned release.
+- Added checked-in dependency resolution through `rebar.lock`, converted
+  published dependencies to Hex packages where possible, and pinned the
+  remaining Git dependencies to exact revisions.
+- Added generated-application configuration through `config/sys.config`,
+  `config/sys.dev.config`, `config/vm.args`, and `config/vm.dev.args`.
+- Retired the historical Makefile, Rebar 2 executable, `rebar.config.script`,
   `boss.config`, `init.sh`, and `init-dev.sh` workflow.
 
 Generated applications
@@ -31,8 +34,13 @@ Generated applications
 
 Compatibility and known limitations
 
-- Preserved the OTP 21.3 production compatibility changes for Tinymq and
-  Simple Bridge.
+- Preserved the historical OTP 21 tuple-call compatibility transforms while
+  maintaining the current OTP 23+ dependency boundary.
+- Pinned `tinymq` to the compatible API revision and changed `boss_mq` to start
+  it through `application:ensure_all_started/1`; the current `boss_mq` poll
+  result shape is covered by EUnit and Common Test.
+- Preserved the Simple Bridge response-building compatibility changes for
+  dynamic HTTP responses.
 - `erlmc` and `medici` remain locked as historical `boss_db` dependencies but
   are excluded from the default release startup closure.
 - The historical `mimetypes` dependency remains temporarily supported through
@@ -41,11 +49,14 @@ Compatibility and known limitations
   config selects `boss.developing_app`, `boss_app` starts MochiWeb's historical
   reloader, and the legacy dynamic loaders target the Rebar3 application ebin
   directory. Production releases remain unaffected.
-- Rebar3 3.22.1 does not consume shell `vm_args`; the dev VM-args template is
+- Rebar3 3.28.0 does not consume shell `vm_args`; the dev VM-args template is
   retained for alternate launchers, while the canonical shell startup is
   handled by `boss_app`.
-- The unchanged Common Test suite still has its known `boss_mq` setup and
-  result-shape failure; test maintenance is intentionally separate.
+- Common Test now starts `boss_mq` and checks the current `poll/2` result shape;
+  the suite passes through the current Rebar3 workflow.
+- OTP 29 compiler compatibility is narrowly handled for legacy ibrowse and
+  Erlando sources through Rebar3 overrides; the production source API remains
+  unchanged.
 - Legacy Windows batch wrappers were removed. Native Windows execution of the
   POSIX-style `mimetypes` post-compile hook remains unvalidated.
 

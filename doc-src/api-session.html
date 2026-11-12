@@ -1,6 +1,6 @@
 {% extends "api.html" %}
 {% block api_content %}
-<p>BossSession is a multiadapter session management. The following adapters are supported (specified in boss.config):</p>
+<p>BossSession is a multiadapter session management. The following adapters are supported (specified in the <code>{boss, [...]}</code> section of <code>config/sys.config</code>):</p>
 <ul>
     <li><code>cache</code> - Store sessions in whatever cache system is configured. Requires <code>cache_enable</code> to be set to <code>true</code>
     <li><code>mnesia</code> - Mnesia. Requires the node to have a name.</li>
@@ -9,7 +9,7 @@
 
 <p>BossSession is automatically started, so, by default an ETS based session support is provided.</p>
 
-<p>The current session ID is available to controllers as the second module parameter. To disable sessions, set "session_enable" to "false" in your boss.config file.</p>
+<p>The current session ID is available to controllers as the second module parameter. To disable sessions, set <code>{session_enable, false}</code> in the <code>{boss, [...]}</code> section of <code>config/sys.config</code>.</p>
 
 <p>BossFlash is a utility on top of boss_session, you can store messages between requests, automatically populated to the view as <code>{{ "{{ boss_flash }}" }}</code> and deleted from session after used.</p>
 

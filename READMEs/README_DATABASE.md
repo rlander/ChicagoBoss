@@ -4,11 +4,18 @@ The Database README
 By default Chicago Boss uses an in-memory database, which is useful for
 development and testing but not much else.
 
+Current Rebar3 applications keep database settings in the `{boss, [...]}`
+section of `config/sys.config`; use `config/sys.dev.config` for development
+overrides. The older `boss.config` name used in the historical examples below
+maps to that section. VM naming and cookies belong in `config/vm.args` or
+`config/vm.dev.args`.
+
 
 Using PostgreSQL/MySQL
 ----------------------
 
-Open up boss.config and set db_adapter to `pgsql` or `mysql`. You should also set:
+Open `config/sys.config` and set `db_adapter` to `pgsql` or `mysql`. You should
+also set:
 
  - db_host
  - db_port
@@ -66,7 +73,7 @@ Tokyo Tyrant is a non-relational database developed by FAL Labs.
 
 2. Run Tyrant with a table database. Other database types are not supported.
 
-3. Open up boss.config and set db_adapter to tyrant
+3. Open `config/sys.config` and set `db_adapter` to `tyrant`
 
 Set the db_port appropriately. By default, Tokyo Tyrant listens on port 1978.
 
@@ -80,7 +87,9 @@ MongoDB is a document-oriented NoSQL database developed by 10gen.
 
 2. Start MongoDB with `mongod`
 
-3. Open up boss.config and set the db_adapter to mongodb and db_database to the name of your choice. The database will be created automatically, with the name you specified.
+3. Open `config/sys.config` and set `db_adapter` to `mongodb` and
+   `db_database` to the name of your choice. The database will be created
+   automatically, with the name you specified.
 
 Set the db_port appropriately. By default, MongoDB listens on port 27017.
 
@@ -91,14 +100,14 @@ Using Mnesia
 Notes:
 
 1. The erlang VM needs a name and cookie to run Mnesia. You can set them with
-   the 'vm_name' and 'vm_cookie' options in boss.config.
+   the node name and cookie in `config/vm.args` or `config/vm.dev.args`.
 
 2. Create a table for each model as well a table called '_ids_' with attributes
    for [type, id]. For more details see
 
    https://github.com/evanmiller/ChicagoBoss/wiki/Automatic-schema-initialization-for-mnesia
 
-3. Open up boss.config and set db_adapter to mnesia
+3. Open `config/sys.config` and set `db_adapter` to `mnesia`
 
 
 Using Riak
@@ -110,7 +119,7 @@ Riak is a NoSQL database developed by Basho Technologies.
 
 2. Start a Riak node with `sudo riak start`
 
-3. Open up boss.config and set db_adapter to riak.
+3. Open `config/sys.config` and set `db_adapter` to `riak`.
 
 For query operations to work, you first need to ensure that search is enabled
 in your Riak configuration:
