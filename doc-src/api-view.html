@@ -19,7 +19,7 @@
 <p>For more complicated processing, you can create helper modules. Tag helper modules reside in src/view/lib/tag_modules, and export functions which take in a proplist of variables and return rendered HTML. Filter helper modules reside in src/view/lib/filter_modules, and export functions which take in a binary string and return a filter iolist. See those directories in your project for examples.</p>
 
 <h2>Configuring ErlyDTL</h2>
-<p>By default, ErlyDTL escapes HTML in values that are passed in template variables. This behaviour is configurable in CB, by setting the value of <code>template_auto_escape</code> to either <code>true</code> or <code>false</code> in <code>boss.config</code>.</p>
+<p>By default, ErlyDTL escapes HTML in values that are passed in template variables. This behaviour is configurable in CB, by setting the value of <code>template_auto_escape</code> to either <code>true</code> or <code>false</code> in the <code>{boss, [...]}</code> section of <code>config/sys.config</code>.</p>
 
 <h2>Implicit variables</h2>
 <p>The following variables are automatically passed to your views without you doing any work:</p>

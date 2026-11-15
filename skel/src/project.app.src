@@ -1,8 +1,8 @@
-{application, {{appid}}, [
-        {description, "My Awesome Web Framework"},
-        {vsn, "0.0.1"},
-        {modules, []},
-        {registered, []},
-        {applications, [kernel, stdlib, crypto]},
-        {env, []}
-    ]}.
+{application, {{name}}, [
+    {description, "{{desc}}"},
+    {vsn, "0.1.0"},
+    {modules, []},
+    {registered, []},
+    {applications, [kernel, stdlib, crypto, boss]},
+    {env, []}
+]}.

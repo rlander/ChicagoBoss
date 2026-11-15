@@ -24,16 +24,16 @@
 run(Bridge) ->
     try
          Bridge2 = boss_web_controller_handle_request:handle_request(Bridge, boss_router),
-        Bridge2:build_response()
-    catch E:C ->
-        _ = lager:error("~p:~p: ~p",[E, C, erlang:get_stacktrace()]),
+        sbw:build_response(Bridge2)
+    catch E:C:Stacktrace ->
+        _ = lager:error("~p:~p: ~p",[E, C, Stacktrace]),
         exit("Error building response")
     end.
 
 ws_init(Bridge) ->
     SessionKey = boss_env:get_env(session_key, "_boss_session"),
-    ServiceUrl = list_to_binary(Bridge:path()),
-    SessionId  = Bridge:cookie(list_to_binary(SessionKey)),
+    ServiceUrl = list_to_binary(sbw:path(Bridge)),
+    SessionId  = sbw:cookie(list_to_binary(SessionKey), Bridge),
     WebsocketId = self(),
     State = #state{websocket_id=WebsocketId,
           session_id=SessionId,

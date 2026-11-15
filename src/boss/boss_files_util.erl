@@ -190,7 +190,17 @@ test_list(AppName) ->
 include_dir() -> filename:join([root_dir(), "include"]).
 -spec ebin_dir() -> input_string().
 
-ebin_dir() -> filename:join([root_dir(), "ebin"]).
+ebin_dir() ->
+    LegacyDir = filename:join([root_dir(), "ebin"]),
+    case application:get_env(boss, developing_app) of
+        {ok, AppName} when is_atom(AppName) ->
+            case code:lib_dir(AppName, ebin) of
+                Dir when is_list(Dir) -> Dir;
+                _ -> LegacyDir
+            end;
+        _ ->
+            LegacyDir
+    end.
 -spec view_filter_helper_list(_) -> [any()].
 
 view_filter_helper_list(AppName) -> module_list(AppName, [view_filter_helper_path()]).

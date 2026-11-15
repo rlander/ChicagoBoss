@@ -267,7 +267,7 @@ render_with_template(Controller, Template, AppInfo, RequestContext,
 
     TranslatableStrings = TemplateAdapter:translatable_strings(Module),
     TranslatorPid = AppInfo#boss_app_info.translator_pid,
-    AcceptLanguage = Req:header(accept_language),
+    AcceptLanguage = sbw:header(accept_language, Req),
     ContentLanguage = extract_content_language(RequestContext, Headers),
 
     {Lang, TranslationFun} = choose_translation_fun(TranslatorPid, TranslatableStrings,
@@ -283,7 +283,7 @@ render_with_template(Controller, Template, AppInfo, RequestContext,
     RenderOptions = [
             {translation_fun, TranslationFun},
             {locale, Lang},
-            {host, Req:header(host)},
+            {host, sbw:header(host, Req)},
             {application, atom_to_list(AppInfo#boss_app_info.application)},
             {controller, Controller},
             {action, Template},
@@ -297,8 +297,8 @@ render_with_template(Controller, Template, AppInfo, RequestContext,
     Err ->
         Err
     catch
-        Class:Error ->
-            lager:error("Error in view ~p ~s", [Module, boss_log_util:stacktrace(Class, Error)])
+        Class:Error:Stacktrace ->
+            lager:error("Error in view ~p ~s", [Module, boss_log_util:stacktrace(Class, Error, Stacktrace)])
     end.
 
 extract_content_language(RequestContext, Headers) ->

@@ -72,8 +72,12 @@ after_filter({Whatever, Content, Headers}, _, RequestContext) ->
                         {secure, boss_env:get_env(session_cookie_secure, false)},
                         {http_only, boss_env:get_env(session_cookie_http_only, true)}
                        ],
-    Cookie = mochiweb_cookies:cookie(?CSRFTOKEN_NAME, Token, CookieOptions),
-    {Whatever, Content, [Cookie | Headers]};
+    %% Keep the cookie structured until the Simple Bridge response adapter
+    %% serializes it. Passing a preformatted Mochiweb Set-Cookie header
+    %% through the generic header path is not portable across backends and
+    %% prevents the Cowboy adapter from registering the response cookie.
+    {Whatever, Content,
+     [{set_cookie, ?CSRFTOKEN_NAME, Token, CookieOptions} | Headers]};
 after_filter(Other, _, _) ->
     Other.
 
@@ -81,7 +85,7 @@ accept_(RequestContext, Token) ->
     {ok, [{?CSRFTOKEN_NAME, Token} | RequestContext]}.
 
 reject_(Reason) ->
-    {error, {csrf, Reason}}.
+    {403, io_lib:format("CSRF validation failed: ~p", [Reason]), []}.
 
 
 csrftoken_name() ->
@@ -106,10 +110,10 @@ pre_check_csrf_token(RequestContext, CSRF_Token, NewToken) ->
         true ->
             reject_(no_csrf_cookie);
         false ->
-            case Request:post_param(?CSRFTOKEN_PARAM_NAME) of
+            case sbw:post_param(?CSRFTOKEN_PARAM_NAME, Request) of
                 undefined ->
                     %% No CSRF Token in POST, let's check HEADERS
-                    case proplists:get_value(?CSRFTOKEN_HEADER, Request:headers()) of
+                    case request_header(?CSRFTOKEN_HEADER, sbw:headers(Request)) of
                         undefined -> reject_(no_csrf_token);
                         HTTPToken ->
                             check_csrf_token(RequestContext, HTTPToken, CSRF_Token, NewToken)
@@ -119,6 +123,17 @@ pre_check_csrf_token(RequestContext, CSRF_Token, NewToken) ->
                     check_csrf_token(RequestContext, PostToken, CSRF_Token, NewToken)
             end
     end.
+
+request_header(Name, Headers) when is_map(Headers) ->
+    HeaderName = case Name of
+        http_x_csrftoken ->
+            <<"x-csrftoken">>;
+        _ ->
+            list_to_binary(atom_to_list(Name))
+    end,
+    maps:get(HeaderName, Headers, undefined);
+request_header(Name, Headers) ->
+    proplists:get_value(Name, Headers).
 
 check_csrf_token(RequestContext, PostToken, CSRF_Token, NewToken) ->
     %% Check if token provided in request is same as we have in cookies
@@ -133,7 +148,7 @@ check_csrf_token(RequestContext, PostToken, CSRF_Token, NewToken) ->
 
 get_csrf_token(Request) ->
     %% Get CSRF Token from cookies
-    case Request:cookie(atom_to_list(?CSRFTOKEN_NAME)) of
+    case sbw:cookie(atom_to_list(?CSRFTOKEN_NAME), Request) of
         "undefined" ->
             %% Generate new Token
             [none, new_token()];
@@ -146,7 +161,7 @@ get_csrf_token(Request) ->
 
 check_referer(Req) ->
     %% Check referer, if needed
-    case Req:protocol() of
+    case sbw:protocol(Req) of
         http ->
             true;
         Protocol ->
@@ -155,7 +170,7 @@ check_referer(Req) ->
                 undefined ->
                     false;
                 _Referer -> %% TODO: Finish referer check
-                    same_host(Req:header("referer"), Protocol, Req:header("host"))
+            same_host(sbw:header("referer", Req), Protocol, sbw:header("host", Req))
             end
     end.
 
@@ -182,4 +197,3 @@ middle_filter_variables( Variables, Context ) ->
             proplists:delete(?CSRFTOKEN_NAME, Variables)
     end,
     [{atom_to_list(?CSRFTOKEN_NAME), TemplateTokenField} | Variables1].
-

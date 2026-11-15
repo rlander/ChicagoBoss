@@ -1,3 +1,16 @@
+Current Rebar3 workflow
+-----------------------
+
+Current Chicago Boss applications use Rebar3. New applications should be
+created from the supplied `skel` template and use `rebar3 compile`,
+`rebar3 eunit`, `rebar3 ct`, `rebar3 release`, and `rebar3 tar`. Runtime
+configuration is kept in `config/sys.config` and `config/vm.args`; development
+shell configuration is kept in `config/sys.dev.config` and `config/vm.dev.args`.
+
+The historical `rebar`, Makefile, `boss.config`, and `init.sh` commands below
+apply only to older Chicago Boss applications. They are retained as historical
+upgrade notes and are not part of the current project workflow.
+
 Upgrade: From 0.8.x to 0.8.12 (where x < 12)
 
 You need a new version of rebar otherwise you are very likely to see weird
